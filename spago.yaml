@@ -2,11 +2,14 @@ package:
   name: ts-chart
   dependencies:
     - argonaut-codecs
+    - argonaut-core
+    - argonaut-generic
     - console
     - effect
     - foreign
     - foreign-object
     - prelude
+    - quickcheck
   test:
     main: Test.Main
     dependencies: []

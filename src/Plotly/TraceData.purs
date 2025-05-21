@@ -1,8 +1,10 @@
 module Plotly.TraceData where
 
+import Data.Argonaut.Decode.Class (class DecodeJson)
+import Data.Argonaut.Encode.Class (class EncodeJson)
+import Data.Eq (class Eq)
+
 import Plotly.Marker (Marker)
-import Foreign (unsafeToForeign)
-import ForeignEncoder (class ForeignEncoder)
 
 newtype TraceData = TraceData
   { x :: Array Int
@@ -11,5 +13,6 @@ newtype TraceData = TraceData
   , mode :: String
   , marker :: Marker
   }
-instance foreignEncoderTraceData :: ForeignEncoder TraceData where
-  encode = unsafeToForeign
+derive newtype instance eqTraceData :: Eq TraceData
+derive newtype instance decodeJsonTraceData :: DecodeJson TraceData
+derive newtype instance encodeJsonTraceData :: EncodeJson TraceData

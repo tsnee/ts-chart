@@ -1,8 +1,10 @@
 module Plotly.DivId where
 
-import Foreign (unsafeToForeign)
-import ForeignEncoder (class ForeignEncoder)
+import Data.Argonaut.Decode.Class (class DecodeJson)
+import Data.Argonaut.Encode.Class (class EncodeJson)
+import Data.Eq (class Eq)
 
 newtype DivId = DivId String
-instance foreignEncoderDivId :: ForeignEncoder DivId where
-  encode = unsafeToForeign
+derive newtype instance eqDivId :: Eq DivId
+derive newtype instance decodeJsonDivId :: DecodeJson DivId
+derive newtype instance encodeJsonDivId :: EncodeJson DivId

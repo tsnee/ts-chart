@@ -2,13 +2,13 @@ module Main where
 
 import Prelude
 
+import Data.Maybe (Maybe(..))
 import Effect (Effect)
---import Effect.Class.Console (log)
 
 import Plotly.TraceData (TraceData(..))
 import Plotly.DivId (DivId(DivId))
 import Plotly.Layout (Layout(..))
-import Plotly.Marker (Marker(..))
+import Plotly.Marker (Marker(..), defaultMarker, withColor)
 import Plotly.Plotly (newPlot)
 
 main :: Effect Unit
@@ -19,8 +19,8 @@ main = do
            , y: [10, 15, 13, 17]
            , type: "scatter"
            , mode: "lines+markers"
-           , marker: Marker { color: "red" }
+           , marker: defaultMarker # withColor "blue"
            }
   ]
-  let layout = Layout { title: "Hello PureScript + Plotly" }
+  let layout = Layout { title: Just "Hello PureScript + Plotly" }
   newPlot (DivId "app") d layout

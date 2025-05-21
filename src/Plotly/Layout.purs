@@ -1,8 +1,12 @@
 module Plotly.Layout where
 
-import Foreign (unsafeToForeign)
-import ForeignEncoder (class ForeignEncoder)
+import Prelude
 
-newtype Layout = Layout { title :: String }
-instance foreignEncoderLayout :: ForeignEncoder Layout where
-  encode = unsafeToForeign
+import Data.Argonaut.Decode.Class (class DecodeJson)
+import Data.Argonaut.Encode.Class (class EncodeJson)
+import Data.Maybe (Maybe)
+
+newtype Layout = Layout { title :: Maybe String }
+derive newtype instance eqLayout :: Eq Layout
+derive newtype instance decodeJsonLayout :: DecodeJson Layout
+derive newtype instance encodeJsonLayout :: EncodeJson Layout

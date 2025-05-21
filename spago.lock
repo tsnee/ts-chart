@@ -6,15 +6,19 @@
         "core": {
           "dependencies": [
             "argonaut-codecs",
+            "argonaut-core",
+            "argonaut-generic",
             "console",
             "effect",
             "foreign",
             "foreign-object",
-            "prelude"
+            "prelude",
+            "quickcheck"
           ],
           "build_plan": [
             "argonaut-codecs",
             "argonaut-core",
+            "argonaut-generic",
             "arrays",
             "bifunctors",
             "console",
@@ -37,6 +41,7 @@
             "integers",
             "invariant",
             "lazy",
+            "lcg",
             "lists",
             "maybe",
             "newtype",
@@ -47,6 +52,8 @@
             "partial",
             "prelude",
             "profunctor",
+            "quickcheck",
+            "random",
             "record",
             "refs",
             "safe-coerce",
@@ -645,6 +652,17 @@
         "tailrec"
       ]
     },
+    "argonaut-generic": {
+      "type": "registry",
+      "version": "8.0.0",
+      "integrity": "sha256-WCqRWoomRKg5BFZnGBS4k4SqBX84fy/X1aJzMyaIeP0=",
+      "dependencies": [
+        "argonaut-codecs",
+        "argonaut-core",
+        "prelude",
+        "record"
+      ]
+    },
     "arrays": {
       "type": "registry",
       "version": "7.3.0",
@@ -924,6 +942,19 @@
         "prelude"
       ]
     },
+    "lcg": {
+      "type": "registry",
+      "version": "4.0.0",
+      "integrity": "sha256-h7ME5cthLfbgJOJdsZcSfFpwXsx4rf8YmhebU+3iSYg=",
+      "dependencies": [
+        "effect",
+        "integers",
+        "maybe",
+        "partial",
+        "prelude",
+        "random"
+      ]
+    },
     "lists": {
       "type": "registry",
       "version": "7.0.0",
@@ -1037,6 +1068,49 @@
         "newtype",
         "prelude",
         "tuples"
+      ]
+    },
+    "quickcheck": {
+      "type": "registry",
+      "version": "8.0.1",
+      "integrity": "sha256-ZvpccKQCvgslTXZCNmpYW4bUsFzhZd/kQUr2WmxFTGY=",
+      "dependencies": [
+        "arrays",
+        "console",
+        "control",
+        "effect",
+        "either",
+        "enums",
+        "exceptions",
+        "foldable-traversable",
+        "gen",
+        "identity",
+        "integers",
+        "lazy",
+        "lcg",
+        "lists",
+        "maybe",
+        "newtype",
+        "nonempty",
+        "numbers",
+        "partial",
+        "prelude",
+        "record",
+        "st",
+        "strings",
+        "tailrec",
+        "transformers",
+        "tuples",
+        "unfoldable"
+      ]
+    },
+    "random": {
+      "type": "registry",
+      "version": "6.0.0",
+      "integrity": "sha256-CJ611a35MPCE7XQMp0rdC6MCn76znlhisiCRgboAG+Q=",
+      "dependencies": [
+        "effect",
+        "integers"
       ]
     },
     "record": {

@@ -2,11 +2,17 @@ module Test.Main where
 
 import Prelude
 
+import Data.Argonaut.Decode.Class (decodeJson)
+import Data.Argonaut.Encode.Class (encodeJson)
+import Data.Either (Either(..))
 import Effect (Effect)
-import Effect.Class.Console (log)
+import Test.QuickCheck (quickCheck)
+
+import Plotly.Marker (Marker)
+
+roundTripTest :: Marker -> Boolean
+roundTripTest t = decodeJson (encodeJson t) == Right t
 
 main :: Effect Unit
-main = do
-  log "🍕"
-  log "You should add some tests."
+main = quickCheck roundTripTest
 
