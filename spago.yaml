@@ -1,5 +1,5 @@
 package:
-  name: tmd3
+  name: ts-chart
   dependencies:
     - argonaut-codecs
     - console
