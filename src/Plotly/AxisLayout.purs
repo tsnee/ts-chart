@@ -9,7 +9,12 @@ import Data.Maybe (Maybe(..))
 import Data.Show.Generic (genericShow)
 import Test.QuickCheck.Arbitrary (class Arbitrary)
 
-newtype AxisLayout = AxisLayout { title :: Maybe String }
+newtype AxisLayout = AxisLayout
+  { gridcolor :: Maybe String
+  , showgrid :: Maybe Boolean
+  , title :: Maybe String
+  , zeroline :: Maybe Boolean
+  }
 derive newtype instance arbitraryAxisLayout :: Arbitrary AxisLayout
 derive newtype instance decodeJsonAxisLayout :: DecodeJson AxisLayout
 derive newtype instance encodeJsonAxisLayout :: EncodeJson AxisLayout
@@ -19,7 +24,21 @@ instance showAxisLayout :: Show AxisLayout where
   show = genericShow
 
 defaultAxisLayout :: AxisLayout
-defaultAxisLayout = AxisLayout { title: Nothing }
+defaultAxisLayout = AxisLayout
+  { gridcolor: Nothing
+  , showgrid: Nothing
+  , title: Nothing
+  , zeroline: Nothing
+  }
+
+withGridcolor :: String -> AxisLayout -> AxisLayout
+withGridcolor c (AxisLayout l) = AxisLayout $ l { gridcolor = Just c, showgrid = Just true }
+
+withShowgrid :: Boolean -> AxisLayout -> AxisLayout
+withShowgrid b (AxisLayout l) = AxisLayout $ l { showgrid = Just b }
 
 withTitle :: String -> AxisLayout -> AxisLayout
 withTitle t (AxisLayout l) = AxisLayout $ l { title = Just t }
+
+withZeroline :: Boolean -> AxisLayout -> AxisLayout
+withZeroline b (AxisLayout l) = AxisLayout $ l { zeroline = Just b }

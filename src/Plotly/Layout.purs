@@ -10,9 +10,17 @@ import Data.Show.Generic (genericShow)
 import Test.QuickCheck.Arbitrary (class Arbitrary)
 
 import Plotly.AxisLayout (AxisLayout)
+import Plotly.Font (Font)
+import Plotly.Legend (Legend)
+import Plotly.Margin (Margin)
 
 newtype Layout = Layout
-  { title :: Maybe String
+  { autosize :: Maybe Boolean
+  , font :: Maybe Font
+  , legend :: Maybe Legend
+  , margin :: Maybe Margin
+  , showlegend :: Maybe Boolean
+  , title :: Maybe String
   , xaxis :: Maybe AxisLayout
   , yaxis :: Maybe AxisLayout
   }
@@ -25,7 +33,25 @@ instance showLayout :: Show Layout where
   show = genericShow
 
 defaultLayout :: Layout
-defaultLayout = Layout { title: Nothing, xaxis: Nothing, yaxis: Nothing }
+defaultLayout = Layout
+  { autosize: Nothing
+  , font: Nothing
+  , legend: Nothing
+  , margin: Nothing
+  , showlegend: Nothing
+  , title: Nothing
+  , xaxis: Nothing
+  , yaxis: Nothing
+  }
+
+withAutosize :: Boolean -> Layout -> Layout
+withAutosize b (Layout l) = Layout $ l { autosize = Just b }
+
+withFont :: Font -> Layout -> Layout
+withFont f (Layout l) = Layout $ l { font = Just f }
+
+withShowlegend :: Boolean -> Layout -> Layout
+withShowlegend b (Layout l) = Layout $ l { showlegend = Just b }
 
 withTitle :: String -> Layout -> Layout
 withTitle t (Layout l) = Layout $ l { title = Just t }
