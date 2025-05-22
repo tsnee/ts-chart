@@ -3,7 +3,6 @@ module Plotly.Plotly (newPlot) where
 import Prelude
 
 import Effect (Effect)
-import Foreign (Foreign)
 import Data.Argonaut.Core (Json)
 import Data.Argonaut.Encode.Class (encodeJson)
 import Data.Function.Uncurried (Fn3, runFn3)
