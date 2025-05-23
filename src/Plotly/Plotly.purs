@@ -17,9 +17,9 @@ newPlot
   => EncodeJson b
   => EncodeJson c
   => DivId -> Array (TraceData a b c) -> Layout -> Effect Unit
-newPlot divId dataArray layout = runFn3 _newPlot
+newPlot divId traceData layout = runFn3 _newPlot
   (encodeJson divId)
-  (encodeJson dataArray)
+  (encodeJson traceData)
   (encodeJson layout)
 
 foreign import _newPlot :: Fn3 Json Json Json (Effect Unit)

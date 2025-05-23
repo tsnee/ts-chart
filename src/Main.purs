@@ -18,7 +18,6 @@ import Plotly.Margin (Margin(..))
 import Plotly.Marker (defaultMarker, withColor) as Marker
 import Plotly.Plotly (newPlot)
 import Plotly.TraceData (smartTraceData, withColorscale, withFill, withFillcolor, withLine, withMarker, withMode, withName, withShowscale, withZ)
-import Data.List.Types (List(Nil), (:))
 
 main :: Effect Unit
 main = do
@@ -64,10 +63,8 @@ main = do
               , [0,1,1,1,0,0,1,1,1,0]
               , [1,1,1,1,1,1,1,1,1,0]
               ]
-            # withMarker (Marker.defaultMarker # Marker.withColor "#004165")
-            # withMode "lines+markers"
             # withName "Heatmap Data"
-            # withColorscale (ColorScale (Tuple 0.0 "white" : Tuple 1.0 "green" : Nil))
+            # withColorscale (ColorScale [Tuple 0.0 "white", Tuple 1.0 "green"])
             # withShowscale false
         ]
       layout1 =

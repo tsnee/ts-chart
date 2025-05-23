@@ -2,8 +2,10 @@ module Plotly.Layout where
 
 import Prelude
 
+import Data.Argonaut.Core (fromObject)
 import Data.Argonaut.Decode.Class (class DecodeJson)
-import Data.Argonaut.Encode.Class (class EncodeJson)
+import Data.Argonaut.Encode.Class (class EncodeJson, encodeJson)
+import Foreign.Object (empty, insert) as FO
 import Data.Generic.Rep (class Generic)
 import Data.Maybe (Maybe(..))
 import Data.Show.Generic (genericShow)
@@ -13,6 +15,7 @@ import Plotly.AxisLayout (AxisLayout)
 import Plotly.Font (Font)
 import Plotly.Legend (Legend)
 import Plotly.Margin (Margin)
+import SparseEncoder (field, sparseRecordToJson)
 
 newtype Layout = Layout
   { autosize :: Maybe Boolean
@@ -27,7 +30,18 @@ newtype Layout = Layout
   }
 derive newtype instance arbitraryLayout :: Arbitrary Layout
 derive newtype instance decodeJsonLayout :: DecodeJson Layout
-derive newtype instance encodeJsonLayout :: EncodeJson Layout
+instance encodeJsonLayout :: EncodeJson Layout where
+  encodeJson (Layout x) = sparseRecordToJson
+    [ field "autosize" x.autosize
+    , field "barmode" x.barmode
+    , field "font" x.font
+    , field "legend" x.legend
+    , field "margin" x.margin
+    , field "showlegend" x.showlegend
+    , field "title" x.title
+    , field "xaxis" x.xaxis
+    , field "yaxis" x.yaxis
+    ]
 derive instance genericLayout :: Generic Layout _
 derive newtype instance eqLayout :: Eq Layout
 instance showLayout :: Show Layout where

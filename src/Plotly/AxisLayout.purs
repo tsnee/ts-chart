@@ -2,12 +2,16 @@ module Plotly.AxisLayout where
 
 import Prelude
 
+import Data.Argonaut.Core (fromObject)
 import Data.Argonaut.Decode.Class (class DecodeJson)
-import Data.Argonaut.Encode.Class (class EncodeJson)
+import Data.Argonaut.Encode.Class (class EncodeJson, encodeJson)
 import Data.Generic.Rep (class Generic)
 import Data.Maybe (Maybe(..))
 import Data.Show.Generic (genericShow)
+import Foreign.Object (empty, insert) as FO
 import Test.QuickCheck.Arbitrary (class Arbitrary)
+
+import SparseEncoder (field, sparseRecordToJson)
 
 newtype AxisLayout = AxisLayout
   { gridcolor :: Maybe String
@@ -17,7 +21,13 @@ newtype AxisLayout = AxisLayout
   }
 derive newtype instance arbitraryAxisLayout :: Arbitrary AxisLayout
 derive newtype instance decodeJsonAxisLayout :: DecodeJson AxisLayout
-derive newtype instance encodeJsonAxisLayout :: EncodeJson AxisLayout
+instance encodeJsonAxisLayout :: EncodeJson AxisLayout where
+  encodeJson (AxisLayout x) = sparseRecordToJson
+    [ field "gridcolor" x.gridcolor
+    , field "showgrid" x.showgrid
+    , field "title" x.title
+    , field "zeroline" x.zeroline
+    ]
 derive instance genericAxisLayout :: Generic AxisLayout _
 derive newtype instance eqAxisLayout :: Eq AxisLayout
 instance showAxisLayout :: Show AxisLayout where

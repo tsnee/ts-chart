@@ -2,14 +2,17 @@ module Plotly.TraceData where
 
 import Prelude
 
+import Data.Argonaut.Core (Json)
 import Data.Argonaut.Decode.Class (class DecodeJson)
-import Data.Argonaut.Encode.Class (class EncodeJson)
+import Data.Argonaut.Encode.Class (class EncodeJson, encodeJson)
 import Data.Maybe (Maybe(..))
+import Data.Tuple (Tuple(..))
 import Test.QuickCheck.Arbitrary (class Arbitrary)
 
 import Plotly.ColorScale (ColorScale)
 import Plotly.Line (Line)
 import Plotly.Marker (Marker)
+import SparseEncoder (field, sparseRecordToJson)
 
 newtype TraceData a b c = TraceData
   { x :: Array a
@@ -37,9 +40,31 @@ derive newtype instance arbitraryTraceData :: Arbitrary (TraceData Number Number
 derive newtype instance decodeJsonTraceData
   :: (DecodeJson a, DecodeJson b, DecodeJson c)
   => DecodeJson (TraceData a b c)
-derive newtype instance encodeJsonTraceData
+instance encodeJsonTraceData
   :: (EncodeJson a, EncodeJson b, EncodeJson c)
-  => EncodeJson (TraceData a b c)
+  => EncodeJson (TraceData a b c) where
+  encodeJson (TraceData d) = sparseRecordToJson
+    [ field "x" (Just d.x)
+    , field "xaxis" d.xaxis
+    , field "y" (Just d.y)
+    , field "yaxis" d.yaxis
+    , field "z" d.z
+    , field "zaxis" d.zaxis
+    , field "colorscale" d.colorscale
+    , field "fill" d.fill
+    , field "fillcolor" d.fillcolor
+    , field "hovertext" d.hovertext
+    , field "legendgroup" d.legendgroup
+    , field "line" d.line
+    , field "marker" d.marker
+    , field "mode" d.mode
+    , field "name" d.name
+    , field "opacity" d.opacity
+    , field "showlegend" d.showlegend
+    , field "showscale" d.showscale
+    , field "text" d.text
+    , field "type" (Just d.type)
+    ]
 derive newtype instance eqTraceData
   :: (Eq a, Eq b, Eq c)
   => Eq (TraceData a b c)
