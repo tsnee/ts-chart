@@ -2,7 +2,7 @@ module Plotly.Line where
 
 import Prelude
 
-import Data.Argonaut.Core (Json, fromString)
+import Data.Argonaut.Core (fromString)
 import Data.Argonaut.Decode.Class (class DecodeJson)
 import Data.Argonaut.Decode.Decoders (decodeString)
 import Data.Argonaut.Decode.Error (JsonDecodeError(UnexpectedValue))

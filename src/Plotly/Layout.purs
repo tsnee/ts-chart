@@ -2,10 +2,8 @@ module Plotly.Layout where
 
 import Prelude
 
-import Data.Argonaut.Core (fromObject)
 import Data.Argonaut.Decode.Class (class DecodeJson)
-import Data.Argonaut.Encode.Class (class EncodeJson, encodeJson)
-import Foreign.Object (empty, insert) as FO
+import Data.Argonaut.Encode.Class (class EncodeJson)
 import Data.Generic.Rep (class Generic)
 import Data.Maybe (Maybe(..))
 import Data.Show.Generic (genericShow)

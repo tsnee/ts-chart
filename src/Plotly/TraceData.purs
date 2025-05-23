@@ -2,11 +2,9 @@ module Plotly.TraceData where
 
 import Prelude
 
-import Data.Argonaut.Core (Json)
 import Data.Argonaut.Decode.Class (class DecodeJson)
-import Data.Argonaut.Encode.Class (class EncodeJson, encodeJson)
+import Data.Argonaut.Encode.Class (class EncodeJson)
 import Data.Maybe (Maybe(..))
-import Data.Tuple (Tuple(..))
 import Test.QuickCheck.Arbitrary (class Arbitrary)
 
 import Plotly.ColorScale (ColorScale)
