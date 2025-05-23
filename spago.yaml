@@ -1,18 +1,16 @@
 package:
   name: ts-chart
   dependencies:
-    - argonaut-codecs
-    - argonaut-core
-    - argonaut-generic
     - console
     - effect
     - foreign
-    - foreign-object
+    - options
     - prelude
-    - quickcheck
   test:
     main: Test.Main
-    dependencies: []
+    dependencies:
+      - quickcheck
+      - test-unit
 workspace:
   packageSet:
     registry: 64.8.0

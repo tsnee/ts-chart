@@ -5,20 +5,13 @@
         "path": "./",
         "core": {
           "dependencies": [
-            "argonaut-codecs",
-            "argonaut-core",
-            "argonaut-generic",
             "console",
             "effect",
             "foreign",
-            "foreign-object",
-            "prelude",
-            "quickcheck"
+            "options",
+            "prelude"
           ],
           "build_plan": [
-            "argonaut-codecs",
-            "argonaut-core",
-            "argonaut-generic",
             "arrays",
             "bifunctors",
             "console",
@@ -41,20 +34,16 @@
             "integers",
             "invariant",
             "lazy",
-            "lcg",
             "lists",
             "maybe",
             "newtype",
             "nonempty",
             "numbers",
-            "ordered-collections",
+            "options",
             "orders",
             "partial",
             "prelude",
             "profunctor",
-            "quickcheck",
-            "random",
-            "record",
             "refs",
             "safe-coerce",
             "st",
@@ -69,8 +58,64 @@
           ]
         },
         "test": {
-          "dependencies": [],
-          "build_plan": []
+          "dependencies": [
+            "quickcheck",
+            "test-unit"
+          ],
+          "build_plan": [
+            "aff",
+            "arrays",
+            "avar",
+            "bifunctors",
+            "catenable-lists",
+            "console",
+            "const",
+            "contravariant",
+            "control",
+            "datetime",
+            "distributive",
+            "effect",
+            "either",
+            "enums",
+            "exceptions",
+            "exists",
+            "foldable-traversable",
+            "free",
+            "functions",
+            "functors",
+            "gen",
+            "identity",
+            "integers",
+            "invariant",
+            "js-timers",
+            "lazy",
+            "lcg",
+            "lists",
+            "maybe",
+            "newtype",
+            "nonempty",
+            "numbers",
+            "ordered-collections",
+            "orders",
+            "parallel",
+            "partial",
+            "prelude",
+            "profunctor",
+            "quickcheck",
+            "random",
+            "record",
+            "refs",
+            "safe-coerce",
+            "st",
+            "strings",
+            "tailrec",
+            "test-unit",
+            "transformers",
+            "tuples",
+            "type-equality",
+            "unfoldable",
+            "unsafe-coerce"
+          ]
         }
       }
     },
@@ -616,51 +661,27 @@
     "extra_packages": {}
   },
   "packages": {
-    "argonaut-codecs": {
-      "type": "registry",
-      "version": "9.1.0",
-      "integrity": "sha256-N6efXByUeg848ompEqJfVvZuZPfdRYDGlTDFn0G0Oh8=",
-      "dependencies": [
-        "argonaut-core",
-        "arrays",
-        "effect",
-        "foreign-object",
-        "identity",
-        "integers",
-        "maybe",
-        "nonempty",
-        "ordered-collections",
-        "prelude",
-        "record"
-      ]
-    },
-    "argonaut-core": {
-      "type": "registry",
-      "version": "7.0.0",
-      "integrity": "sha256-RC82GfAjItydxrO24cdX373KHVZiLqybu19b5X8u7B4=",
-      "dependencies": [
-        "arrays",
-        "control",
-        "either",
-        "foreign-object",
-        "functions",
-        "gen",
-        "maybe",
-        "nonempty",
-        "prelude",
-        "strings",
-        "tailrec"
-      ]
-    },
-    "argonaut-generic": {
+    "aff": {
       "type": "registry",
       "version": "8.0.0",
-      "integrity": "sha256-WCqRWoomRKg5BFZnGBS4k4SqBX84fy/X1aJzMyaIeP0=",
+      "integrity": "sha256-5MmdI4+0RHBtSBy+YlU3/Cq4R5W2ih3OaRedJIrVHdk=",
       "dependencies": [
-        "argonaut-codecs",
-        "argonaut-core",
+        "bifunctors",
+        "control",
+        "datetime",
+        "effect",
+        "either",
+        "exceptions",
+        "foldable-traversable",
+        "functions",
+        "maybe",
+        "newtype",
+        "parallel",
         "prelude",
-        "record"
+        "refs",
+        "tailrec",
+        "transformers",
+        "unsafe-coerce"
       ]
     },
     "arrays": {
@@ -684,6 +705,19 @@
         "unsafe-coerce"
       ]
     },
+    "avar": {
+      "type": "registry",
+      "version": "5.0.1",
+      "integrity": "sha256-f+bRR3qQPa/GVe4UbLQiJBy7+PzJkUCwT6qNn0UlkMY=",
+      "dependencies": [
+        "aff",
+        "effect",
+        "either",
+        "exceptions",
+        "functions",
+        "maybe"
+      ]
+    },
     "bifunctors": {
       "type": "registry",
       "version": "6.1.0",
@@ -694,6 +728,20 @@
         "newtype",
         "prelude",
         "tuples"
+      ]
+    },
+    "catenable-lists": {
+      "type": "registry",
+      "version": "7.0.0",
+      "integrity": "sha256-76vYENhwF4BWTBsjeLuErCH2jqVT4M3R1HX+4RwSftA=",
+      "dependencies": [
+        "control",
+        "foldable-traversable",
+        "lists",
+        "maybe",
+        "prelude",
+        "tuples",
+        "unfoldable"
       ]
     },
     "console": {
@@ -734,6 +782,29 @@
       "dependencies": [
         "newtype",
         "prelude"
+      ]
+    },
+    "datetime": {
+      "type": "registry",
+      "version": "6.1.0",
+      "integrity": "sha256-g/5X5BBegQWLpI9IWD+sY6mcaYpzzlW5lz5NBzaMtyI=",
+      "dependencies": [
+        "bifunctors",
+        "control",
+        "either",
+        "enums",
+        "foldable-traversable",
+        "functions",
+        "gen",
+        "integers",
+        "lists",
+        "maybe",
+        "newtype",
+        "numbers",
+        "ordered-collections",
+        "partial",
+        "prelude",
+        "tuples"
       ]
     },
     "distributive": {
@@ -856,6 +927,27 @@
         "unfoldable"
       ]
     },
+    "free": {
+      "type": "registry",
+      "version": "7.1.0",
+      "integrity": "sha256-JAumgEsGSzJCNLD8AaFvuX7CpqS5yruCngi6yI7+V5k=",
+      "dependencies": [
+        "catenable-lists",
+        "control",
+        "distributive",
+        "either",
+        "exists",
+        "foldable-traversable",
+        "invariant",
+        "lazy",
+        "maybe",
+        "prelude",
+        "tailrec",
+        "transformers",
+        "tuples",
+        "unsafe-coerce"
+      ]
+    },
     "functions": {
       "type": "registry",
       "version": "6.0.0",
@@ -929,6 +1021,14 @@
       "dependencies": [
         "control",
         "prelude"
+      ]
+    },
+    "js-timers": {
+      "type": "registry",
+      "version": "6.1.0",
+      "integrity": "sha256-znHWLSSOYw15P5DTcsAdal2lf7nGA2yayLdOZ2t5r7o=",
+      "dependencies": [
+        "effect"
       ]
     },
     "lazy": {
@@ -1016,6 +1116,18 @@
         "maybe"
       ]
     },
+    "options": {
+      "type": "registry",
+      "version": "7.0.0",
+      "integrity": "sha256-treC6h+jvzcWhplPaF/aMENCOx+JGk+ysa5pL1BGHtg=",
+      "dependencies": [
+        "contravariant",
+        "foreign",
+        "foreign-object",
+        "maybe",
+        "tuples"
+      ]
+    },
     "ordered-collections": {
       "type": "registry",
       "version": "3.2.0",
@@ -1041,6 +1153,24 @@
       "dependencies": [
         "newtype",
         "prelude"
+      ]
+    },
+    "parallel": {
+      "type": "registry",
+      "version": "7.0.0",
+      "integrity": "sha256-gUC9i4Txnx9K9RcMLsjujbwZz6BB1bnE2MLvw4GIw5o=",
+      "dependencies": [
+        "control",
+        "effect",
+        "either",
+        "foldable-traversable",
+        "functors",
+        "maybe",
+        "newtype",
+        "prelude",
+        "profunctor",
+        "refs",
+        "transformers"
       ]
     },
     "partial": {
@@ -1187,6 +1317,23 @@
         "partial",
         "prelude",
         "refs"
+      ]
+    },
+    "test-unit": {
+      "type": "registry",
+      "version": "17.0.0",
+      "integrity": "sha256-aITJ2KngFFjASmG0JjnjybaKWl9dn7Hf2B3Wk4engNs=",
+      "dependencies": [
+        "aff",
+        "avar",
+        "effect",
+        "either",
+        "free",
+        "js-timers",
+        "lists",
+        "prelude",
+        "quickcheck",
+        "strings"
       ]
     },
     "transformers": {

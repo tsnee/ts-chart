@@ -2,24 +2,19 @@ module Plotly.Plotly (newPlot) where
 
 import Prelude
 
-import Effect (Effect)
-import Data.Argonaut.Core (Json)
-import Data.Argonaut.Encode.Class (class EncodeJson, encodeJson)
 import Data.Function.Uncurried (Fn3, runFn3)
+import Data.Options (Options, options)
+import Effect (Effect)
+import Foreign (Foreign, unsafeToForeign)
 
 import Plotly.DivId (DivId)
 import Plotly.Layout (Layout)
 import Plotly.TraceData (TraceData)
 
-newPlot
-  :: forall a b c
-  .  EncodeJson a
-  => EncodeJson b
-  => EncodeJson c
-  => DivId -> Array (TraceData a b c) -> Layout -> Effect Unit
+newPlot :: DivId -> Array (Options TraceData) -> Options Layout -> Effect Unit
 newPlot divId traceData layout = runFn3 _newPlot
-  (encodeJson divId)
-  (encodeJson traceData)
-  (encodeJson layout)
+  (unsafeToForeign divId)
+  (options <$> traceData)
+  (options layout)
 
-foreign import _newPlot :: Fn3 Json Json Json (Effect Unit)
+foreign import _newPlot :: Fn3 Foreign (Array Foreign) Foreign (Effect Unit)
