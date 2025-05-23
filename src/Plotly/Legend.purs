@@ -1,4 +1,4 @@
-module Plotly.Legend where
+module Plotly.Legend (Legend(..)) where
 
 import Prelude
 

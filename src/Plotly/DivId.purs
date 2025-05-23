@@ -1,4 +1,4 @@
-module Plotly.DivId where
+module Plotly.DivId (DivId(..)) where
 
 import Prelude
 

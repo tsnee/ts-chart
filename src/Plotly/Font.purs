@@ -1,4 +1,4 @@
-module Plotly.Font where
+module Plotly.Font (Font(..)) where
 
 import Prelude
 

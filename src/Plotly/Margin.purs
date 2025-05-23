@@ -1,4 +1,4 @@
-module Plotly.Margin where
+module Plotly.Margin (Margin(..)) where
 
 import Prelude
 

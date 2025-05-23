@@ -1,6 +1,5 @@
-module Plotly.Marker where
+module Plotly.Marker (Marker, color, size) where
 
-import Prelude
 import Data.Options (Option, opt)
 
 data Marker

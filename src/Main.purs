@@ -17,10 +17,58 @@ import Plotly.Margin (Margin(..))
 import Plotly.Marker (color) as Marker
 import Plotly.Plotly (newPlot)
 import Plotly.Shape (Shape(..))
-import Plotly.TraceData (colorscale, fill, fillcolor, line, marker, mode, name, showscale, typ, x, y, z)
+import Plotly.TraceData (colorscale, fill, fillcolor, line, marker, mode, name, showscale, stackgroup, typ, x, y, z)
+import Plotly.Line (shape)
 
-main :: Effect Unit
-main = do
+stackedLineChart :: Effect Unit
+stackedLineChart = do
+  let td =
+        [ x := ["July", "August", "September", "October", "November", "December", "January", "February", "March", "April"]
+          <> y := [0, 0, 0, 0, 0, 1, 1, 1, 1, 1]
+          <> name := "Goal 1"
+          <> typ := "scatter"
+          <> line := (shape := Vh)
+          <> mode := "lines"
+          <> stackgroup := "first"
+          <> fill := "tonexty"
+        , x := ["July", "August", "September", "October", "November", "December", "January", "February", "March", "April"]
+          <> y := [0, 0, 0, 0, 0, 0, 1, 1, 1, 1]
+          <> name := "Goal 2"
+          <> typ := "scatter"
+          <> line := (shape := Vh)
+          <> mode := "lines"
+          <> stackgroup := "first"
+          <> fill := "tonexty"
+        , x := ["July", "August", "September", "October", "November", "December", "January", "February", "March", "April"]
+          <> y := [0, 0, 0, 0, 0, 0, 0, 1, 1, 1]
+          <> name := "Goal 3"
+          <> typ := "scatter"
+          <> line := (shape := Vh)
+          <> mode := "lines"
+          <> stackgroup := "first"
+          <> fill := "tonexty"
+        , x := ["July", "August", "September", "October", "November", "December", "January", "February", "March", "April"]
+          <> y := [0, 0, 0, 0, 0, 0, 0, 0, 1, 1]
+          <> name := "Goal 4"
+          <> typ := "scatter"
+          <> line := (shape := Vh)
+          <> mode := "lines"
+          <> stackgroup := "first"
+          <> fill := "tonexty"
+        , x := ["July", "August", "September", "October", "November", "December", "January", "February", "March", "April"]
+          <> y := [0, 0, 0, 0, 0, 0, 0, 0, 0, 1]
+          <> name := "Goal 5"
+          <> typ := "scatter"
+          <> line := (shape := Vh)
+          <> mode := "lines"
+          <> stackgroup := "first"
+          <> fill := "tonexty"
+        ]
+      layout = title := "Stacked Area Chart"
+  newPlot (DivId "stacked") td layout
+
+lineChart :: Effect Unit
+lineChart = do
   let td0 =
         [ x := [1, 2, 3, 4]
         <> y := [10, 15, 13, 17]
@@ -42,6 +90,9 @@ main = do
         <> xaxis := (AL.title := "Time" <> AL.showgrid := false <> AL.zeroline := false)
         <> yaxis := (AL.title := "DCP Points" <> AL.gridcolor := "#eee")
   newPlot (DivId "linechart") td0 layout0
+
+heatmap :: Effect Unit
+heatmap = do
   let td1 =
         [ x := ["Goal 1", "Goal 2", "Goal 3", "Goal 4", "Goal 5", "Goal 6", "Goal 7", "Goal 8", "Goal 9", "Goal 10"]
         <> y := ["Club A", "Club B", "Club C"]
@@ -52,7 +103,7 @@ main = do
               , [1,1,1,1,1,1,1,1,1,0]
               ]
         <> name := "Heatmap Data"
-        <> colorscale := (ColorScale [Tuple 0.0 "white", Tuple 1.0 "green"])
+        <> colorscale := (ColorScale [Tuple 0.0 "#A9B2B1", Tuple 1.0 "#772432"])
         <> showscale := false
         ]
       layout1 =
@@ -60,3 +111,9 @@ main = do
         <> xaxis := (AL.title := "DCP Goals")
         <> yaxis := (AL.title := "Clubs")
   newPlot (DivId "heatmap") td1 layout1
+
+main :: Effect Unit
+main = do
+  stackedLineChart
+  heatmap
+  lineChart

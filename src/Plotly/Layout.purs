@@ -1,4 +1,15 @@
-module Plotly.Layout where
+module Plotly.Layout
+( Layout
+, autosize
+, barmode
+, font
+, legend
+, margin
+, showlegend
+, title
+, xaxis
+, yaxis
+) where
 
 import Prelude
 

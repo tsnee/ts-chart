@@ -1,4 +1,27 @@
-module Plotly.TraceData where
+module Plotly.TraceData
+( TraceData
+, x
+, xaxis
+, y
+, yaxis
+, z
+, zaxis
+, colorscale
+, fill
+, fillcolor
+, hovertext
+, legendgroup
+, line
+, marker
+, mode
+, name
+, opacity
+, showlegend
+, showscale
+, stackgroup
+, text
+, typ
+) where
 
 import Prelude
 
@@ -30,7 +53,7 @@ zaxis :: Option TraceData String
 zaxis = opt "zaxis"
 
 colorscale :: Option TraceData ColorScale
-colorscale = cmap toForeign (opt "colorscale")
+colorscale = cmap toForeign $ opt "colorscale"
 
 fill :: Option TraceData String
 fill = opt "fill"
@@ -64,6 +87,9 @@ showlegend = opt "showlegend"
 
 showscale :: Option TraceData Boolean
 showscale = opt "showscale"
+
+stackgroup :: Option TraceData String
+stackgroup = opt "stackgroup"
 
 text :: Option TraceData (Array String)
 text = opt "text"

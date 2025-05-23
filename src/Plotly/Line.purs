@@ -1,11 +1,24 @@
-module Plotly.Line where
+module Plotly.Line
+( Line(..)
+, cmin
+, cmax
+, color
+, coloraxis
+, colorscale
+, dash
+, reversescale
+, shape
+, simplify
+, smoothing
+, width
+) where
 
 import Prelude
 
 import Data.Functor.Contravariant (cmap)
 import Data.Options (Option, opt)
 
-import Plotly.Shape (Shape, toForeignStringLower)
+import Plotly.Shape (Shape, showLower)
 
 data Line
 
@@ -31,7 +44,7 @@ reversescale :: Option Line Boolean
 reversescale = opt "reversescale"
 
 shape :: Option Line Shape
-shape = cmap toForeignStringLower (opt "shape")
+shape = cmap showLower $ opt "shape"
 
 simplify :: Option Line Boolean
 simplify = opt "simplify"
