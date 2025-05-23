@@ -16,6 +16,7 @@ import Plotly.Margin (Margin)
 
 newtype Layout = Layout
   { autosize :: Maybe Boolean
+  , barmode :: Maybe String
   , font :: Maybe Font
   , legend :: Maybe Legend
   , margin :: Maybe Margin
@@ -35,6 +36,7 @@ instance showLayout :: Show Layout where
 defaultLayout :: Layout
 defaultLayout = Layout
   { autosize: Nothing
+  , barmode: Nothing
   , font: Nothing
   , legend: Nothing
   , margin: Nothing
@@ -47,6 +49,9 @@ defaultLayout = Layout
 withAutosize :: Boolean -> Layout -> Layout
 withAutosize b (Layout l) = Layout $ l { autosize = Just b }
 
+withBarmode :: String -> Layout -> Layout
+withBarmode s (Layout l) = Layout $ l { barmode = Just s }
+
 withFont :: Font -> Layout -> Layout
 withFont f (Layout l) = Layout $ l { font = Just f }
 
@@ -55,3 +60,9 @@ withShowlegend b (Layout l) = Layout $ l { showlegend = Just b }
 
 withTitle :: String -> Layout -> Layout
 withTitle t (Layout l) = Layout $ l { title = Just t }
+
+withXAxis :: AxisLayout -> Layout -> Layout
+withXAxis al (Layout l) = Layout $ l { xaxis = Just al }
+
+withYAxis :: AxisLayout -> Layout -> Layout
+withYAxis al (Layout l) = Layout $ l { yaxis = Just al }

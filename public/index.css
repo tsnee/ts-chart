@@ -1,0 +1,9 @@
+.responsive-image {
+  max-width: 30vw;    /* never exceed the viewport width */
+  max-height: 30vh;   /* never exceed the viewport height */
+  width: auto;
+  height: auto;
+  display: block;
+  margin: auto;        /* center the image */
+  object-fit: contain; /* optional: scale without distortion */
+}

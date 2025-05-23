@@ -4,14 +4,19 @@ import Prelude
 
 import Effect (Effect)
 import Data.Argonaut.Core (Json)
-import Data.Argonaut.Encode.Class (encodeJson)
+import Data.Argonaut.Encode.Class (class EncodeJson, encodeJson)
 import Data.Function.Uncurried (Fn3, runFn3)
 
 import Plotly.DivId (DivId)
 import Plotly.Layout (Layout)
 import Plotly.TraceData (TraceData)
 
-newPlot :: DivId -> Array TraceData -> Layout -> Effect Unit
+newPlot
+  :: forall a b c
+  .  EncodeJson a
+  => EncodeJson b
+  => EncodeJson c
+  => DivId -> Array (TraceData a b c) -> Layout -> Effect Unit
 newPlot divId dataArray layout = runFn3 _newPlot
   (encodeJson divId)
   (encodeJson dataArray)
