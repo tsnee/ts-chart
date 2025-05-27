@@ -2,69 +2,77 @@ module Main where
 
 import Prelude
 
-import Data.Options ((:=))
+import Data.Argonaut.Encode (toJsonString)
+import Data.Either (Either(..))
+import Data.HTTP.Method (Method(POST))
+import Data.Options (Options, (:=))
 import Data.Tuple (Tuple(..))
 import Effect (Effect)
+import Effect.Aff (Aff, runAff_)
+import Effect.Class.Console (log)
+import Effect.Exception (Error, message)
+import Fetch (fetch)
+import Fetch.Argonaut.Json (fromJson)
 
 import Plotly.AxisLayout (gridcolor, showgrid, title, zeroline) as AL
 import Plotly.ColorScale (ColorScale(..))
 import Plotly.DivId (DivId(..))
 import Plotly.Font (Font(..))
 import Plotly.Layout (autosize, font, legend, margin, showlegend, title, xaxis, yaxis)
-import Plotly.Legend (Legend(Legend))
+import Plotly.Legend (Legend(..))
 import Plotly.Line (color, shape) as Line
 import Plotly.Margin (Margin(..))
 import Plotly.Marker (color) as Marker
 import Plotly.Plotly (newPlot)
 import Plotly.Shape (Shape(..))
-import Plotly.TraceData (colorscale, fill, fillcolor, line, marker, mode, name, showscale, stackgroup, typ, x, y, z)
+import Plotly.TraceData (TraceData, colorscale, fill, fillcolor, line, marker, mode, name, showscale, stackgroup, typ, x, y, z)
 import Plotly.Line (shape)
+import Data.Array (range)
+import Data.Int (toNumber)
 
-stackedLineChart :: Effect Unit
-stackedLineChart = do
-  let td =
-        [ x := ["July", "August", "September", "October", "November", "December", "January", "February", "March", "April"]
-          <> y := [0, 0, 0, 0, 0, 1, 1, 1, 1, 1]
-          <> name := "Goal 1"
+type Nested b = Array { label :: String, codomain :: Array b }
+
+type HttpBinRequest a b =
+  { domain :: Array a
+  , series :: Nested b
+  }
+type HttpBinResponse = { json :: HttpBinRequest String Number }
+
+dataArray :: Nested Number
+dataArray = do
+  i <- range 1 10
+  pure { label: "Goal " <> show i, codomain: toNumber <$> range 0 9 }
+
+request :: HttpBinRequest String Number
+request = { "domain": ["July", "August", "September", "October", "November", "December", "January", "February", "March", "April"]
+          , "series": dataArray
+          }
+
+fetchaff :: Aff (HttpBinRequest String Number)
+fetchaff = do
+  { json } <- fetch "https://httpbin.org/post"
+    { method: POST
+    , body: toJsonString request
+    , headers: { "Content-Type": "application/json" }
+    }
+  { json: a } :: HttpBinResponse <- fromJson json
+  pure a
+
+stackedLineChart :: HttpBinRequest String Number -> Effect Unit
+stackedLineChart req = do
+  let layout = title := "Stacked Area Chart"
+      td :: Array (Options TraceData)
+      td = do
+        { label, codomain } <- req.series
+        pure $
+          x := req.domain
+          <> y := codomain
+          <> name := label
           <> typ := "scatter"
-          <> line := (shape := Vh)
+          <> line := (shape := Linear)
           <> mode := "lines"
           <> stackgroup := "first"
           <> fill := "tonexty"
-        , x := ["July", "August", "September", "October", "November", "December", "January", "February", "March", "April"]
-          <> y := [0, 0, 0, 0, 0, 0, 1, 1, 1, 1]
-          <> name := "Goal 2"
-          <> typ := "scatter"
-          <> line := (shape := Vh)
-          <> mode := "lines"
-          <> stackgroup := "first"
-          <> fill := "tonexty"
-        , x := ["July", "August", "September", "October", "November", "December", "January", "February", "March", "April"]
-          <> y := [0, 0, 0, 0, 0, 0, 0, 1, 1, 1]
-          <> name := "Goal 3"
-          <> typ := "scatter"
-          <> line := (shape := Vh)
-          <> mode := "lines"
-          <> stackgroup := "first"
-          <> fill := "tonexty"
-        , x := ["July", "August", "September", "October", "November", "December", "January", "February", "March", "April"]
-          <> y := [0, 0, 0, 0, 0, 0, 0, 0, 1, 1]
-          <> name := "Goal 4"
-          <> typ := "scatter"
-          <> line := (shape := Vh)
-          <> mode := "lines"
-          <> stackgroup := "first"
-          <> fill := "tonexty"
-        , x := ["July", "August", "September", "October", "November", "December", "January", "February", "March", "April"]
-          <> y := [0, 0, 0, 0, 0, 0, 0, 0, 0, 1]
-          <> name := "Goal 5"
-          <> typ := "scatter"
-          <> line := (shape := Vh)
-          <> mode := "lines"
-          <> stackgroup := "first"
-          <> fill := "tonexty"
-        ]
-      layout = title := "Stacked Area Chart"
   newPlot (DivId "stacked") td layout
 
 lineChart :: Effect Unit
@@ -112,8 +120,12 @@ heatmap = do
         <> yaxis := (AL.title := "Clubs")
   newPlot (DivId "heatmap") td1 layout1
 
+logFetchResult :: Either Error (HttpBinRequest String Number) -> Effect Unit
+logFetchResult (Left err) = log $ message err
+logFetchResult (Right a)  = stackedLineChart a
+
 main :: Effect Unit
 main = do
-  stackedLineChart
+  runAff_ logFetchResult fetchaff
   heatmap
   lineChart

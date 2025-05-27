@@ -14,7 +14,7 @@ fixture :: Options Line
 fixture = shape := Linear
 
 stringified :: String
-stringified = "{ \"shape\": \"linear\" }"
+stringified = """{ "shape": "linear" }"""
 
 tests :: TestSuite
 tests =

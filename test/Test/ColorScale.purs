@@ -14,7 +14,7 @@ fixture :: ColorScale
 fixture = ColorScale [Tuple 0.0 "red", Tuple 1.0 "yellow"]
 
 stringified :: String
-stringified = "[[0, \"red\"], [1, \"yellow\"]]"
+stringified = """[[0, "red"], [1, "yellow"]]"""
 
 tests :: TestSuite
 tests =

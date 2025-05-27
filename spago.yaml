@@ -3,6 +3,8 @@ package:
   dependencies:
     - console
     - effect
+    - fetch
+    - fetch-argonaut
     - foreign
     - options
     - prelude
