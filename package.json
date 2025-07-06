@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
+    "predev": "spago build",
     "dev": "vite",
+    "prebuild": "spago bundle",
     "build": "vite build",
     "preview": "vite preview",
     "test": "spago test"
