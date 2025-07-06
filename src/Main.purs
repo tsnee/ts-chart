@@ -27,7 +27,7 @@ import Plotly.Margin (Margin(..))
 import Plotly.Marker (color) as Marker
 import Plotly.Plotly (newPlot)
 import Plotly.Shape (Shape(..))
-import Plotly.TraceData (TraceData, colorscale, fill, fillcolor, line, marker, mode, name, showscale, stackgroup, typ, x, y, z)
+import Plotly.TraceData (TraceData, colorscale, fill, fillcolor, line, marker, mode, name, showscale, typ, x, y, z)
 import Plotly.Line (shape)
 
 newtype Response = Response { series :: Array Series }
@@ -50,7 +50,7 @@ fetchaff :: Aff Response
 fetchaff = do
   { json } <- fetch "http://localhost:8080/measurements/club"
     { method: POST
-    , body: toJsonString {"metrics":["ActiveMembers"]}
+    , body: toJsonString {"club_number":2490993,"metrics":["MembershipBase","NewMembers","ActiveMembers"]}
     , headers: { "Content-Type": "application/json" }
     }
   x :: Response <- fromJson json
@@ -69,10 +69,8 @@ stackedLineChart (Response{series}) = do
             StringCodomain ys -> y := ys
           <> name := label
           <> typ := "scatter"
-          <> line := (shape := Linear)
+          <> line := (shape := Vh)
           <> mode := "lines"
-          <> stackgroup := "first"
-          <> fill := "tonexty"
   newPlot (DivId "stacked") td layout
 
 lineChart :: Effect Unit
