@@ -11,7 +11,9 @@
             "fetch-argonaut",
             "foreign",
             "options",
-            "prelude"
+            "prelude",
+            "web-dom",
+            "web-html"
           ],
           "build_plan": [
             "aff",
@@ -45,6 +47,7 @@
             "identity",
             "integers",
             "invariant",
+            "js-date",
             "js-fetch",
             "js-promise",
             "js-promise-aff",
@@ -54,6 +57,7 @@
             "media-types",
             "newtype",
             "nonempty",
+            "now",
             "nullable",
             "numbers",
             "options",
@@ -79,6 +83,8 @@
             "web-dom",
             "web-events",
             "web-file",
+            "web-html",
+            "web-storage",
             "web-streams"
           ]
         },
@@ -146,7 +152,7 @@
     },
     "package_set": {
       "address": {
-        "registry": "64.8.0"
+        "registry": "65.1.0"
       },
       "compiler": ">=0.15.15 <0.16.0",
       "content": {
@@ -183,6 +189,7 @@
         "assert": "6.0.0",
         "assert-multiple": "0.4.0",
         "avar": "5.0.1",
+        "axon": "0.0.3",
         "b64": "0.0.8",
         "barbies": "1.0.1",
         "barlow-lens": "0.9.0",
@@ -241,7 +248,7 @@
         "distributive": "6.0.0",
         "dodo-printer": "2.2.3",
         "dom-filereader": "7.0.0",
-        "dom-indexed": "12.0.0",
+        "dom-indexed": "13.0.0",
         "dom-simple": "0.4.0",
         "dotenv": "4.0.3",
         "droplet": "0.6.0",
@@ -267,7 +274,7 @@
         "exitcodes": "4.0.0",
         "expect-inferred": "3.0.0",
         "express": "0.9.1",
-        "ezfetch": "1.1.0",
+        "ezfetch": "1.1.1",
         "fahrtwind": "2.0.0",
         "fakerjs": "0.0.1",
         "fallback": "0.1.0",
@@ -277,6 +284,7 @@
         "fetch-core": "5.1.0",
         "fetch-yoga-json": "1.1.0",
         "ffi-simple": "0.5.1",
+        "fft": "0.3.0",
         "fft-js": "0.1.0",
         "filterable": "5.0.0",
         "fix-functor": "0.1.0",
@@ -337,7 +345,7 @@
         "halogen-vdom-string-renderer": "0.5.0",
         "halogen-xterm": "2.0.0",
         "heckin": "2.0.1",
-        "heterogeneous": "0.6.0",
+        "heterogeneous": "0.7.0",
         "homogeneous": "0.4.0",
         "http-methods": "6.0.0",
         "httpurple": "4.0.0",
@@ -401,6 +409,7 @@
         "meowclient": "1.0.0",
         "midi": "4.0.0",
         "milkis": "9.0.0",
+        "mimetype": "0.0.1",
         "minibench": "4.0.1",
         "mmorph": "7.0.0",
         "monad-control": "5.0.0",
@@ -670,7 +679,7 @@
         "webextension-polyfill": "0.1.0",
         "webgpu": "0.0.1",
         "which": "2.0.0",
-        "whine-core": "0.0.30",
+        "whine-core": "0.0.32",
         "xterm": "1.0.0",
         "yoga-fetch": "1.0.1",
         "yoga-json": "5.1.0",
@@ -1162,6 +1171,19 @@
         "prelude"
       ]
     },
+    "js-date": {
+      "type": "registry",
+      "version": "8.0.0",
+      "integrity": "sha256-6TVF4DWg5JL+jRAsoMssYw8rgOVALMUHT1CuNZt8NRo=",
+      "dependencies": [
+        "datetime",
+        "effect",
+        "exceptions",
+        "foreign",
+        "integers",
+        "now"
+      ]
+    },
     "js-fetch": {
       "type": "registry",
       "version": "0.2.1",
@@ -1301,6 +1323,15 @@
         "prelude",
         "tuples",
         "unfoldable"
+      ]
+    },
+    "now": {
+      "type": "registry",
+      "version": "6.0.0",
+      "integrity": "sha256-xZ7x37ZMREfs6GCDw/h+FaKHV/3sPWmtqBZRGTxybQY=",
+      "dependencies": [
+        "datetime",
+        "effect"
       ]
     },
     "nullable": {
@@ -1661,6 +1692,26 @@
         "foreign",
         "media-types",
         "web-dom"
+      ]
+    },
+    "web-html": {
+      "type": "registry",
+      "version": "4.1.0",
+      "integrity": "sha256-ByqS/h1/yG+hjCOnOQp7L1QpIWzQENNKB1kaHtpEhlE=",
+      "dependencies": [
+        "js-date",
+        "web-dom",
+        "web-file",
+        "web-storage"
+      ]
+    },
+    "web-storage": {
+      "type": "registry",
+      "version": "5.0.0",
+      "integrity": "sha256-q+6lxcnfWxus0/nDeFVtF1V+tLehZvvXQ0cduYPLksY=",
+      "dependencies": [
+        "nullable",
+        "web-events"
       ]
     },
     "web-streams": {

@@ -1,9 +1,52 @@
-.responsive-image {
-  max-width: 30vw;    /* never exceed the viewport width */
-  max-height: 30vh;   /* never exceed the viewport height */
+body {
+  color: #F2DF74;
+  background-color: #772432;
+  font-family: Montserrat, serif;
+}
+dl {
+  display: flex;
+  margin-top: 0;
+}
+dt {
+  display: flex;
+  font-weight: bold;
+  font-size: 1.5em;
+  margin-left: 0.5em;
+  margin-right: 0.5em;
+}
+dd {
+  display: flex;
+  font-style: italic;
+  margin-top: 0.25em;
+}
+img {
+  display: flex;
+  max-width: 25vw;    /* never exceed the viewport width */
+  max-height: 25vh;   /* never exceed the viewport height */
   width: auto;
   height: auto;
+  object-fit: contain; /* optional: scale without distortion */
+  margin-left: auto;
+  margin-right: 2em;
+}
+img.responsive-image {
   display: block;
   margin: auto;        /* center the image */
-  object-fit: contain; /* optional: scale without distortion */
+}
+.area-heading {
+  font-size: 2em;
+}
+.center {
+  text-align: center;
+  display: block;
+  margin: 0 auto;
+}
+.club {
+  width: 100%;
+  height: 400px;
+}
+.side-by-side {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
 }

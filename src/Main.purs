@@ -2,8 +2,6 @@ module Main where
 
 import Prelude
 
-import Data.Argonaut.Decode.Class (class DecodeJson, decodeJson)
-import Data.Argonaut.Decode.Error (JsonDecodeError(..))
 import Data.Argonaut.Encode (toJsonString)
 import Data.Either (Either(..))
 import Data.HTTP.Method (Method(POST))
@@ -29,22 +27,7 @@ import Plotly.Plotly (newPlot)
 import Plotly.Shape (Shape(..))
 import Plotly.TraceData (TraceData, colorscale, fill, fillcolor, line, marker, mode, name, showscale, typ, x, y, z)
 import Plotly.Line (shape)
-
-newtype Response = Response { series :: Array Series }
-derive newtype instance decodeJsonResponse :: DecodeJson Response
-
-newtype Series = Series { label :: String, domain :: Array String, codomain :: Codomain }
-derive newtype instance decodeJsonSeries :: DecodeJson Series
-
-data Codomain = IntCodomain (Array Int) | StringCodomain (Array String)
-instance decodeJsonCodomain :: DecodeJson Codomain where
-  decodeJson json =
-    case decodeJson json :: Either JsonDecodeError (Array Int) of
-      Right ints -> Right (IntCodomain ints)
-      Left _ ->
-        case decodeJson json :: Either JsonDecodeError (Array String) of
-          Right strs -> Right (StringCodomain strs)
-          Left _ -> Left $ TypeMismatch "Codomain: expected array of ints or strings"
+import Utils (Codomain(..), Response(..), Series(..))
 
 fetchaff :: Aff Response
 fetchaff = do

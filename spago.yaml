@@ -8,6 +8,8 @@ package:
     - foreign
     - options
     - prelude
+    - web-dom
+    - web-html
   test:
     main: Test.Main
     dependencies:
@@ -15,5 +17,5 @@ package:
       - test-unit
 workspace:
   packageSet:
-    registry: 64.8.0
+    registry: 65.1.0
   extraPackages: {}
