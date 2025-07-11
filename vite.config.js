@@ -1,4 +1,5 @@
 import { defineConfig } from 'vite'
+import { cloudflare } from "@cloudflare/vite-plugin"
 import path from 'path'
 
 export default defineConfig({
@@ -29,5 +30,6 @@ export default defineConfig({
   optimizeDeps: {
     // This tells Vite not to try to pre-bundle PureScript output modules
     exclude: ['output']
-  }
+  },
+  plugins: [cloudflare()]
 })
