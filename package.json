@@ -11,7 +11,7 @@
     "test": "spago test"
   },
   "keywords": [],
-  "author": "",
+  "author": "tomsnee@gmail.com",
   "license": "ISC",
   "description": "",
   "devDependencies": {
