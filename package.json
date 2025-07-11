@@ -17,7 +17,8 @@
   "devDependencies": {
     "purescript": "^0.15.15",
     "spago": "^0.93.44",
-    "vite": "^6.3.5"
+    "vite": "^6.3.5",
+    "wrangler": "^4.24.3"
   },
   "dependencies": {
     "plotly.js-dist": "^3.0.1"
