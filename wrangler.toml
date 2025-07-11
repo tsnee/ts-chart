@@ -5,4 +5,4 @@ workers_dev = false
 routes = [{ pattern = "d117.brightringsoftware.com", custom_domain = true }]
 
 [assets]
-directory = "./dist"
+binding = "ASSETS"

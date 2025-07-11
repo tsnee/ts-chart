@@ -2,6 +2,7 @@
   "name": "ts-chart",
   "version": "1.0.0",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "predev": "spago build",
     "dev": "vite",
