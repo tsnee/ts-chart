@@ -1,0 +1,8 @@
+name = "ts-chart-worker"
+account_id = "58d5127d8a3427cd2c18f5f1ef2d6573"
+compatibility_date = "2025-07-11"
+workers_dev = false
+routes = ["d117.brightringsoftware.com/*"]
+
+[site]
+bucket = "./dist"

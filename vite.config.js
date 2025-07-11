@@ -16,7 +16,15 @@ export default defineConfig({
   },
   build: {
     outDir: 'dist',          // output folder for production build
-    emptyOutDir: true
+    emptyOutDir: true,
+    rollupOptions: {
+      input: {
+        area11: path.resolve(__dirname, 'area11.html'),
+        area12: path.resolve(__dirname, 'area12.html'),
+        area13: path.resolve(__dirname, 'area13.html'),
+        area14: path.resolve(__dirname, 'area14.html')
+      }
+    }
   },
   optimizeDeps: {
     // This tells Vite not to try to pre-bundle PureScript output modules
