@@ -12,4 +12,5 @@ generated-docs/
 .psa*
 .spago
 .idea
+.wrangler
 .*.swp
