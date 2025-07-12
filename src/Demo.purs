@@ -54,7 +54,7 @@ stackedLineChart (Response{series}) = do
           <> typ := "scatter"
           <> line := (shape := Vh)
           <> mode := "lines"
-  newPlot (DivId "stacked") td layout
+  void $ newPlot (DivId "stacked") td layout
 
 lineChart :: Effect Unit
 lineChart = do
@@ -78,7 +78,7 @@ lineChart = do
         <> title := "Line Chart Title"
         <> xaxis := (AL.title := "Time" <> AL.showgrid := false <> AL.zeroline := false)
         <> yaxis := (AL.title := "DCP Points" <> AL.gridcolor := "#eee")
-  newPlot (DivId "linechart") td0 layout0
+  void $ newPlot (DivId "linechart") td0 layout0
 
 heatmap :: Effect Unit
 heatmap = do
@@ -99,7 +99,7 @@ heatmap = do
         title := "Toastmasters DCP Goal Completion by Club"
         <> xaxis := (AL.title := "DCP Goals")
         <> yaxis := (AL.title := "Clubs")
-  newPlot (DivId "heatmap") td1 layout1
+  void $ newPlot (DivId "heatmap") td1 layout1
 
 logFetchResult :: Either Error Response -> Effect Unit
 logFetchResult (Left err) = log $ message err

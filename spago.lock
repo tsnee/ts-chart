@@ -6,10 +6,12 @@
         "core": {
           "dependencies": [
             "console",
+            "datetime",
             "effect",
             "fetch",
             "fetch-argonaut",
             "foreign",
+            "js-date",
             "options",
             "prelude",
             "web-dom",
