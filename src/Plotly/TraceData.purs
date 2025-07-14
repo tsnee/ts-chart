@@ -1,27 +1,27 @@
 module Plotly.TraceData
-( TraceData
-, x
-, xaxis
-, y
-, yaxis
-, z
-, zaxis
-, colorscale
-, fill
-, fillcolor
-, hovertext
-, legendgroup
-, line
-, marker
-, mode
-, name
-, opacity
-, showlegend
-, showscale
-, stackgroup
-, text
-, typ
-) where
+  ( TraceData
+  , x
+  , xaxis
+  , y
+  , yaxis
+  , z
+  , zaxis
+  , colorscale
+  , fill
+  , fillcolor
+  , hovertext
+  , legendgroup
+  , line
+  , marker
+  , mode
+  , name
+  , opacity
+  , showlegend
+  , showscale
+  , stackgroup
+  , text
+  , typ
+  ) where
 
 import Prelude
 

@@ -1,10 +1,10 @@
 module Plotly.AxisLayout
-( AxisLayout
-, gridcolor
-, showgrid
-, title
-, zeroline
-) where
+  ( AxisLayout
+  , gridcolor
+  , showgrid
+  , title
+  , zeroline
+  ) where
 
 import Data.Options (Option, opt)
 

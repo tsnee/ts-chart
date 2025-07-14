@@ -35,12 +35,13 @@ getElementsBySelector q = do
   let p = toParentNode $ toDocument doc
   nodeList <- querySelectorAll q p
   nodeArray <- toArray nodeList
-  pure $ foldl f [] nodeArray where
-    f :: Array HTMLElement -> Node -> Array HTMLElement
-    f hs n = do
-      e <- fromMaybe $ fromNode n
-      h <- fromMaybe $ fromElement e
-      snoc hs h
+  pure $ foldl f [] nodeArray
+  where
+  f :: Array HTMLElement -> Node -> Array HTMLElement
+  f hs n = do
+    e <- fromMaybe $ fromNode n
+    h <- fromMaybe $ fromElement e
+    snoc hs h
 
 populateDateDiv :: Date -> Date -> HTMLElement -> Effect Unit
 populateDateDiv startDate endDate parent = do
@@ -52,16 +53,18 @@ populateClubDiv startDate endDate clubDiv = do
   clubNumberString <- (id <<< toElement) clubDiv
   case fromString clubNumberString of
     Nothing -> log $ "Cannot convert '" <> show clubNumberString <> "' to a club number."
-    Just n -> runHalogenAff $ runUI PC.component { org, metrics, startDate, endDate } clubDiv where
+    Just n -> runHalogenAff $ runUI PC.component { org, metrics, startDate, endDate } clubDiv
+      where
       org = Club $ ClubId n
-      metrics = ["ActiveMembers", "MembershipBase", "NewMembers"]
+      metrics = [ "ActiveMembers", "MembershipBase", "NewMembers" ]
 
 main :: Effect Unit
 main = do
   endDate <- nowDate
-  let startDate = case adjust (Days (-180.0 :: Number)) endDate of
-        Nothing -> endDate
-        Just lastMonth -> lastMonth
+  let
+    startDate = case adjust (Days (-180.0 :: Number)) endDate of
+      Nothing -> endDate
+      Just lastMonth -> lastMonth
   dateRanges <- getElementsBySelector $ QuerySelector "div.date-range"
   traverse_ (populateDateDiv startDate endDate) dateRanges
   clubDivs <- getElementsBySelector $ QuerySelector "div.club"

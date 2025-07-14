@@ -20,5 +20,5 @@ tests :: TestSuite
 tests =
   suite "Shape downcasing" do
     test "Happy path" do
-      {actual, expected} <- evaluate (options fixture) stringified
+      { actual, expected } <- evaluate (options fixture) stringified
       Assert.equal expected actual

@@ -11,6 +11,7 @@ newtype Margin = Margin
   , t :: Int
   , b :: Int
   }
+
 derive instance genericMargin :: Generic Margin _
 derive newtype instance eqMargin :: Eq Margin
 instance showMargin :: Show Margin where

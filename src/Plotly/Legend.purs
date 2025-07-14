@@ -10,6 +10,7 @@ newtype Legend = Legend
   , x :: Number
   , y :: Number
   }
+
 derive instance genericLegend :: Generic Legend _
 derive newtype instance eqLegend :: Eq Legend
 instance showLegend :: Show Legend where

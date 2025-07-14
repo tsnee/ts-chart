@@ -34,17 +34,18 @@ labelText startOrEnd = show startOrEnd <> " Date:"
 component :: forall m. MonadAff m => H.Component Query Input Output m
 component = H.mkComponent componentSpec
   where
-    componentSpec :: H.ComponentSpec State Query Action Slots Input Output m
-    componentSpec = { initialState, render, eval }
-    initialState :: Input -> State
-    initialState = identity
-    render { startOrEnd, date } = HH.label
-      [ HP.for $ inputDivId startOrEnd ]
-      [ HH.text $ labelText startOrEnd
-      , HH.input
+  componentSpec :: H.ComponentSpec State Query Action Slots Input Output m
+  componentSpec = { initialState, render, eval }
+
+  initialState :: Input -> State
+  initialState = identity
+  render { startOrEnd, date } = HH.label
+    [ HP.for $ inputDivId startOrEnd ]
+    [ HH.text $ labelText startOrEnd
+    , HH.input
         [ HP.id $ inputDivId startOrEnd
         , HP.type_ HP.InputDate
         , HP.value $ iso8601Format date
         ]
-      ]
-    eval = H.mkEval H.defaultEval
+    ]
+  eval = H.mkEval H.defaultEval

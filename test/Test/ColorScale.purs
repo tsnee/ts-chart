@@ -11,7 +11,7 @@ import Plotly.ColorScale (ColorScale(..), toForeign)
 import Test.Evaluation (evaluate)
 
 fixture :: ColorScale
-fixture = ColorScale [Tuple 0.0 "red", Tuple 1.0 "yellow"]
+fixture = ColorScale [ Tuple 0.0 "red", Tuple 1.0 "yellow" ]
 
 stringified :: String
 stringified = """[[0, "red"], [1, "yellow"]]"""

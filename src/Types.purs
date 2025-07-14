@@ -9,7 +9,7 @@ module Types
   , Series(..)
   , StartOrEnd(..)
   , iso8601Format
-) where
+  ) where
 
 import Prelude
 
@@ -25,14 +25,16 @@ import Data.String.Common (replaceAll)
 import Data.String.Pattern (Pattern(..), Replacement(..))
 import Data.String.Utils (padStart)
 
-
 newtype Response = Response { club_number :: Int, series :: Array Series }
+
 derive newtype instance decodeJsonResponse :: DecodeJson Response
 
 newtype Series = Series { label :: String, domain :: Array String, codomain :: Codomain }
+
 derive newtype instance decodeJsonSeries :: DecodeJson Series
 
 data Codomain = IntCodomain (Array Int) | StringCodomain (Array String)
+
 instance decodeJsonCodomain :: DecodeJson Codomain where
   decodeJson json =
     case decodeJson json :: Either JsonDecodeError (Array Int) of
@@ -47,35 +49,43 @@ data Organization
   | Area AreaId
   | Division DivisionId
   | District DistrictId
+
 derive instance genericOrganization :: Generic Organization _
 instance showOrganization :: Show Organization where
   show = genericShow
 
 newtype ClubId = ClubId Int
+
 derive newtype instance showClubId :: Show ClubId
 
 data AreaId = AreaId Int | AreaNotAssigned
+
 derive instance genericAreaId :: Generic AreaId _
 instance showAreaId :: Show AreaId where
   show = genericShow
 
 data DivisionId = DivisionId Char | DivisionNotAssigned
+
 derive instance genericDivisionId :: Generic DivisionId _
 instance showDivisionId :: Show DivisionId where
   show = genericShow
 
 newtype DistrictId = DistrictId Int
+
 derive newtype instance showDistrictId :: Show DistrictId
 
 data StartOrEnd = Start | End
+
 instance showDateType :: Show StartOrEnd where
   show Start = "Start"
   show End = "End"
 
 iso8601Format :: Date -> String
 iso8601Format date =
-  let y = show $ fromEnum $ year date
-      m = pad2 $ fromEnum $ month date
-      d = pad2 $ fromEnum $ day date
-      pad2 i = replaceAll (Pattern " ") (Replacement "0") $ padStart 2 $ show $ clamp 0 31 i
-  in joinWith "-" [y, m, d]
+  let
+    y = show $ fromEnum $ year date
+    m = pad2 $ fromEnum $ month date
+    d = pad2 $ fromEnum $ day date
+    pad2 i = replaceAll (Pattern " ") (Replacement "0") $ padStart 2 $ show $ clamp 0 31 i
+  in
+    joinWith "-" [ y, m, d ]

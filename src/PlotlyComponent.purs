@@ -72,41 +72,44 @@ chartDivId { org: Division DivisionNotAssigned } = "division-not-assigned"
 component :: forall m. MonadAff m => H.Component Query Input Output m
 component = H.mkComponent componentSpec
   where
-    componentSpec :: H.ComponentSpec State Query Action Slots Input Output m
-    componentSpec = { initialState, render, eval }
-    initialState :: Input -> State
-    initialState = identity
-    render state = HH.div_
-      [ HH.h3_ [HH.text $ headerText state ]
-      , HH.div
-          [ HP.id $ chartDivId state
-          , HP.class_ (ClassName "chart")
-          ] []
-      ]
-    eval =
-      H.mkEval H.defaultEval
-        { initialize = Just Initialize
-        , handleAction = handleAction
-        }
-    handleAction :: Action -> H.HalogenM State Action Slots Output m Unit
-    handleAction = case _ of
-                       Initialize -> draw
-                       ChangeOrg org -> do
-                          log $ "changing club to " <> show org
-                          H.modify_ \s -> s { org = org }
-                          redraw
-                       ChangeMetrics metrics -> do
-                          log $ "changing metrics to " <> show metrics
-                          H.modify_ \s -> s { metrics = metrics }
-                          redraw
-                       ChangeStartDate startDate -> do
-                          log $ "changing start date to " <> show startDate
-                          H.modify_ \s -> s { startDate = startDate }
-                          redraw
-                       ChangeEndDate endDate -> do
-                          log $ "changing end date to " <> show endDate
-                          H.modify_ \s -> s { endDate = endDate }
-                          redraw
+  componentSpec :: H.ComponentSpec State Query Action Slots Input Output m
+  componentSpec = { initialState, render, eval }
+
+  initialState :: Input -> State
+  initialState = identity
+  render state = HH.div_
+    [ HH.h3_ [ HH.text $ headerText state ]
+    , HH.div
+        [ HP.id $ chartDivId state
+        , HP.class_ (ClassName "chart")
+        ]
+        []
+    ]
+  eval =
+    H.mkEval H.defaultEval
+      { initialize = Just Initialize
+      , handleAction = handleAction
+      }
+
+  handleAction :: Action -> H.HalogenM State Action Slots Output m Unit
+  handleAction = case _ of
+    Initialize -> draw
+    ChangeOrg org -> do
+      log $ "changing club to " <> show org
+      H.modify_ \s -> s { org = org }
+      redraw
+    ChangeMetrics metrics -> do
+      log $ "changing metrics to " <> show metrics
+      H.modify_ \s -> s { metrics = metrics }
+      redraw
+    ChangeStartDate startDate -> do
+      log $ "changing start date to " <> show startDate
+      H.modify_ \s -> s { startDate = startDate }
+      redraw
+    ChangeEndDate endDate -> do
+      log $ "changing end date to " <> show endDate
+      H.modify_ \s -> s { endDate = endDate }
+      redraw
 
 draw :: forall m. MonadState State m => MonadAff m => m Unit
 draw = do
@@ -123,23 +126,25 @@ fetchaff (ClubId clubNumber) metrics startDate endDate = liftAff $ do
     { method: POST
     , headers: { "Content-Type": "application/json" }
     , body: toJsonString
-      { "club_number": clubNumber
-      , "metrics": metrics
-      , "start_date": iso8601Format startDate
-      , "end_date": iso8601Format endDate
-      }
+        { "club_number": clubNumber
+        , "metrics": metrics
+        , "start_date": iso8601Format startDate
+        , "end_date": iso8601Format endDate
+        }
     }
   response :: Response <- fromJson json
   pure response
 
 createPlot :: Response -> Effect HTMLElement
-createPlot (Response{club_number, series}) = do
-  let layout = title := show club_number
-      td :: Array (Options TraceData)
-      td = do
-        Series{ label, domain, codomain } <- series
-        pure $
-          x := domain
+createPlot (Response { club_number, series }) = do
+  let
+    layout = title := show club_number
+
+    td :: Array (Options TraceData)
+    td = do
+      Series { label, domain, codomain } <- series
+      pure $
+        x := domain
           <> case codomain of
             IntCodomain ys -> y := ys
             StringCodomain ys -> y := ys

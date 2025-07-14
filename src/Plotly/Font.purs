@@ -10,6 +10,7 @@ newtype Font = Font
   , size :: Int
   , color :: String
   }
+
 derive instance genericFont :: Generic Font _
 derive newtype instance eqFont :: Eq Font
 instance showFont :: Show Font where

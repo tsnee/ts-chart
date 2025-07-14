@@ -1,17 +1,17 @@
 module Plotly.Line
-( Line(..)
-, cmin
-, cmax
-, color
-, coloraxis
-, colorscale
-, dash
-, reversescale
-, shape
-, simplify
-, smoothing
-, width
-) where
+  ( Line(..)
+  , cmin
+  , cmax
+  , color
+  , coloraxis
+  , colorscale
+  , dash
+  , reversescale
+  , shape
+  , simplify
+  , smoothing
+  , width
+  ) where
 
 import Prelude
 
