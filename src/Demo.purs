@@ -27,7 +27,7 @@ import Plotly.Plotly (newPlot)
 import Plotly.Shape (Shape(..))
 import Plotly.TraceData (TraceData, colorscale, fill, fillcolor, line, marker, mode, name, showscale, typ, x, y, z)
 import Plotly.Line (shape)
-import Utils (Codomain(..), Response(..), Series(..))
+import Types (Codomain(..), Response(..), Series(..))
 
 fetchaff :: Aff Response
 fetchaff = do

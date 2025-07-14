@@ -7,9 +7,13 @@ package:
     - fetch
     - fetch-argonaut
     - foreign
+    - halogen
+    - halogen-css
     - js-date
     - options
     - prelude
+    - stringutils
+    - undefined
     - web-dom
     - web-html
   test:

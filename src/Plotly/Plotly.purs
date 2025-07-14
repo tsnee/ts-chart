@@ -6,7 +6,8 @@ import Data.Function.Uncurried (Fn3, runFn3)
 import Data.Options (Options, options)
 import Effect (Effect)
 import Foreign (Foreign, unsafeToForeign)
-import Web.HTML.HTMLElement (HTMLElement)
+import Web.DOM.Node (Node)
+import Web.HTML.HTMLElement (HTMLElement, toNode)
 
 import Plotly.DivId (DivId)
 import Plotly.Layout (Layout)
@@ -18,9 +19,12 @@ newPlot divId traceData layout = runFn3 _newPlot
   (options <$> traceData)
   (options layout)
 
-updatePlot :: HTMLElement -> TraceData -> Layout -> Effect Unit
-updatePlot plot traceData layout = runFn3 _updatePlot plot traceData layout
+updatePlot :: HTMLElement -> Array (Options TraceData) -> Options Layout -> Effect Unit
+updatePlot plot traceData layout = runFn3 _updatePlot
+  (toNode plot)
+  (options <$> traceData)
+  (options layout)
 
 foreign import _newPlot :: Fn3 Foreign (Array Foreign) Foreign (Effect HTMLElement)
 
-foreign import _updatePlot :: Fn3 HTMLElement TraceData Layout (Effect Unit)
+foreign import _updatePlot :: Fn3 Node (Array Foreign) Foreign (Effect Unit)
