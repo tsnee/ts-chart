@@ -1,12 +1,29 @@
-module Types (AreaId(..), ClubId(..), Codomain(..), DistrictId(..), DivisionId(..), Organization(..), Response(..), Series(..)) where
+module Types
+  ( AreaId(..)
+  , ClubId(..)
+  , Codomain(..)
+  , DistrictId(..)
+  , DivisionId(..)
+  , Organization(..)
+  , Response(..)
+  , Series(..)
+  , StartOrEnd(..)
+  , iso8601Format
+) where
 
 import Prelude
 
 import Data.Argonaut.Decode.Class (class DecodeJson, decodeJson)
 import Data.Argonaut.Decode.Error (JsonDecodeError(..))
+import Data.Date (Date, day, month, year)
 import Data.Either (Either(..))
+import Data.Enum (fromEnum)
 import Data.Generic.Rep (class Generic)
 import Data.Show.Generic (genericShow)
+import Data.String (joinWith)
+import Data.String.Common (replaceAll)
+import Data.String.Pattern (Pattern(..), Replacement(..))
+import Data.String.Utils (padStart)
 
 
 newtype Response = Response { club_number :: Int, series :: Array Series }
@@ -49,3 +66,16 @@ instance showDivisionId :: Show DivisionId where
 
 newtype DistrictId = DistrictId Int
 derive newtype instance showDistrictId :: Show DistrictId
+
+data StartOrEnd = Start | End
+instance showDateType :: Show StartOrEnd where
+  show Start = "Start"
+  show End = "End"
+
+iso8601Format :: Date -> String
+iso8601Format date =
+  let y = show $ fromEnum $ year date
+      m = pad2 $ fromEnum $ month date
+      d = pad2 $ fromEnum $ day date
+      pad2 i = replaceAll (Pattern " ") (Replacement "0") $ padStart 2 $ show $ clamp 0 31 i
+  in joinWith "-" [y, m, d]

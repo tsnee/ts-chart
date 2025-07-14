@@ -5,15 +5,10 @@ import Prelude
 import Control.Monad.State.Class (class MonadState)
 import Data.Argonaut.Encode (toJsonString)
 import Data.Const (Const)
-import Data.Date (Date, day, month, year)
-import Data.Enum (fromEnum)
+import Data.Date (Date)
 import Data.HTTP.Method (Method(POST))
 import Data.Maybe (Maybe(..))
 import Data.Options (Options, (:=))
-import Data.String (joinWith)
-import Data.String.Common (replaceAll)
-import Data.String.Pattern (Pattern(..), Replacement(..))
-import Data.String.Utils (padStart)
 import Effect (Effect)
 import Effect.Aff.Class (class MonadAff, liftAff)
 import Effect.Class (liftEffect)
@@ -32,7 +27,7 @@ import Plotly.Plotly (newPlot)
 import Plotly.Shape (Shape(..))
 import Plotly.TraceData (TraceData, line, mode, name, typ, x, y)
 import Plotly.Line (shape)
-import Types (AreaId(..), ClubId(..), Codomain(..), DistrictId(..), DivisionId(..), Organization(..), Response(..), Series(..))
+import Types (AreaId(..), ClubId(..), Codomain(..), DistrictId(..), DivisionId(..), Organization(..), Response(..), Series(..), iso8601Format)
 
 type State =
   { org :: Organization
@@ -121,14 +116,6 @@ draw = do
       clubData <- liftAff $ fetchaff clubId metrics startDate endDate
       void $ liftEffect $ createPlot clubData
     unexpected -> log $ "This code only supports Clubs, not " <> show unexpected
-
-iso8601Format :: Date -> String
-iso8601Format date =
-  let y = show $ fromEnum $ year date
-      m = pad2 $ fromEnum $ month date
-      d = pad2 $ fromEnum $ day date
-      pad2 i = replaceAll (Pattern " ") (Replacement "0") $ padStart 2 $ show $ clamp 0 31 i
-  in joinWith "-" [y, m, d]
 
 fetchaff :: forall m. MonadAff m => ClubId -> Array String -> Date -> Date -> m Response
 fetchaff (ClubId clubNumber) metrics startDate endDate = liftAff $ do

@@ -24,16 +24,16 @@ import Web.HTML.HTMLDocument (toDocument)
 import Web.HTML.HTMLElement (HTMLElement, fromElement, toElement)
 import Web.HTML.Window (document)
 
-import PlotlyComponent (component)
-import Types (ClubId(..), Organization(..))
+import DateComponent as DC
+import PlotlyComponent as PC
+import Types (ClubId(..), Organization(..), StartOrEnd(..))
 
-getClubDivs :: Effect (Array HTMLElement)
-getClubDivs = do
-  log "getClubDivs"
+getElementsBySelector :: QuerySelector -> Effect (Array HTMLElement)
+getElementsBySelector q = do
   win <- window
   doc <- document win
   let p = toParentNode $ toDocument doc
-  nodeList <- querySelectorAll (QuerySelector "div.club") p
+  nodeList <- querySelectorAll q p
   nodeArray <- toArray nodeList
   pure $ foldl f [] nodeArray where
     f :: Array HTMLElement -> Node -> Array HTMLElement
@@ -42,30 +42,27 @@ getClubDivs = do
       h <- fromMaybe $ fromElement e
       snoc hs h
 
-logBadNumbers :: String -> Effect (Array Int)
-logBadNumbers x =
-  case fromString x of
-    Just i -> pure [i]
-    Nothing -> do
-      log $ "Cannot convert '" <> x <> "' to a club number."
-      pure []
+populateDateDiv :: Date -> Date -> HTMLElement -> Effect Unit
+populateDateDiv startDate endDate parent = do
+  runHalogenAff $ runUI DC.component { startOrEnd: Start, date: startDate } parent
+  runHalogenAff $ runUI DC.component { startOrEnd: End, date: endDate } parent
 
 populateClubDiv :: Date -> Date -> HTMLElement -> Effect Unit
 populateClubDiv startDate endDate clubDiv = do
-  log $ "populateClubDiv " <> show startDate <> ", " <> show endDate
   clubNumberString <- (id <<< toElement) clubDiv
-  log $ "populateClubDiv - " <> clubNumberString
   case fromString clubNumberString of
     Nothing -> log $ "Cannot convert '" <> show clubNumberString <> "' to a club number."
-    Just n -> runHalogenAff $ runUI component { org, metrics, startDate, endDate } clubDiv where
+    Just n -> runHalogenAff $ runUI PC.component { org, metrics, startDate, endDate } clubDiv where
       org = Club $ ClubId n
       metrics = ["ActiveMembers", "MembershipBase", "NewMembers"]
 
 main :: Effect Unit
 main = do
-  clubDivs <- getClubDivs
   endDate <- nowDate
   let startDate = case adjust (Days (-180.0 :: Number)) endDate of
         Nothing -> endDate
         Just lastMonth -> lastMonth
+  dateRanges <- getElementsBySelector $ QuerySelector "div.date-range"
+  traverse_ (populateDateDiv startDate endDate) dateRanges
+  clubDivs <- getElementsBySelector $ QuerySelector "div.club"
   traverse_ (populateClubDiv startDate endDate) clubDivs
