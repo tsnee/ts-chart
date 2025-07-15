@@ -7,6 +7,7 @@ package:
     - fetch
     - fetch-argonaut
     - foreign
+    - formatters
     - halogen
     - halogen-css
     - js-date
@@ -16,6 +17,7 @@ package:
     - undefined
     - web-dom
     - web-html
+    - web-uievents
   test:
     main: Test.Main
     dependencies:

@@ -9,21 +9,21 @@ module Types
   , Series(..)
   , StartOrEnd(..)
   , iso8601Format
+  , iso8601Parse
   ) where
 
 import Prelude
 
 import Data.Argonaut.Decode.Class (class DecodeJson, decodeJson)
 import Data.Argonaut.Decode.Error (JsonDecodeError(..))
-import Data.Date (Date, day, month, year)
-import Data.Either (Either(..))
-import Data.Enum (fromEnum)
+import Data.Date (Date)
+import Data.DateTime (DateTime(..), date)
+import Data.Formatter.DateTime (Formatter, FormatterCommand(..), format, unformat)
+import Data.Either (Either(..), hush)
 import Data.Generic.Rep (class Generic)
+import Data.List (List(..), (:))
+import Data.Maybe (Maybe)
 import Data.Show.Generic (genericShow)
-import Data.String (joinWith)
-import Data.String.Common (replaceAll)
-import Data.String.Pattern (Pattern(..), Replacement(..))
-import Data.String.Utils (padStart)
 
 newtype Response = Response { club_number :: Int, series :: Array Series }
 
@@ -80,12 +80,14 @@ instance showDateType :: Show StartOrEnd where
   show Start = "Start"
   show End = "End"
 
+separator :: FormatterCommand
+separator = Placeholder "-"
+
+iso8601Date :: Formatter
+iso8601Date = YearFull : separator : MonthTwoDigits : separator : DayOfMonthTwoDigits : Nil
+
 iso8601Format :: Date -> String
-iso8601Format date =
-  let
-    y = show $ fromEnum $ year date
-    m = pad2 $ fromEnum $ month date
-    d = pad2 $ fromEnum $ day date
-    pad2 i = replaceAll (Pattern " ") (Replacement "0") $ padStart 2 $ show $ clamp 0 31 i
-  in
-    joinWith "-" [ y, m, d ]
+iso8601Format date = format iso8601Date dateTime where dateTime = DateTime date bottom
+
+iso8601Parse :: String -> Maybe Date
+iso8601Parse s = date <$> (hush $ unformat iso8601Date s)
