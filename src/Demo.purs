@@ -31,7 +31,7 @@ import Types (Codomain(..), Response(..), Series(..))
 
 fetchaff :: Aff Response
 fetchaff = do
-  { json } <- fetch "https://api.brightringsofteare.com/measurements/club"
+  { json } <- fetch "https://api.brightringsoftware.com/measurements/club"
     { method: POST
     , body: toJsonString { "club_number": 2490993, "metrics": [ "MembershipBase", "NewMembers", "ActiveMembers" ] }
     , headers: { "Content-Type": "application/json" }

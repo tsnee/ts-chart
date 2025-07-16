@@ -8,9 +8,8 @@ import Data.Const (Const)
 import Data.Date (Date)
 import Data.HTTP.Method (Method(POST))
 import Data.Maybe (Maybe(..))
-import Data.Newtype (class Newtype, unwrap)
+import Data.Newtype (unwrap)
 import Data.Options (Options, (:=))
-import Effect (Effect)
 import Effect.Aff.Class (class MonadAff, liftAff)
 import Effect.Class (liftEffect)
 import Effect.Class.Console (log)
@@ -28,7 +27,7 @@ import Plotly.Plotly (newPlot, updatePlot)
 import Plotly.Shape (Shape(..))
 import Plotly.TraceData (TraceData, line, mode, name, typ, x, y)
 import Plotly.Line (shape)
-import Types (AreaId(..), ClubId(..), Codomain(..), DistrictId(..), DivisionId(..), Response(..), Series(..), iso8601Format)
+import Types (ClubId(..), Codomain(..), Response(..), Series(..), iso8601Format)
 
 type State =
   { clubName :: String
@@ -66,10 +65,10 @@ component = H.mkComponent { initialState, render, eval }
   render { clubName, clubNumber } = HH.div_
     [ HH.h3_ [ HH.text clubName ]
     , HH.div
-      [ HP.id $ unwrap $ chartDivId clubNumber
-      , HP.class_ (ClassName "chart")
-      ]
-      []
+        [ HP.id $ unwrap $ chartDivId clubNumber
+        , HP.class_ (ClassName "chart")
+        ]
+        []
     ]
   eval =
     H.mkEval H.defaultEval
