@@ -87,7 +87,9 @@ iso8601Date :: Formatter
 iso8601Date = YearFull : separator : MonthTwoDigits : separator : DayOfMonthTwoDigits : Nil
 
 iso8601Format :: Date -> String
-iso8601Format date = format iso8601Date dateTime where dateTime = DateTime date bottom
+iso8601Format date = format iso8601Date dateTime
+  where
+  dateTime = DateTime date bottom
 
 iso8601Parse :: String -> Maybe Date
 iso8601Parse s = date <$> (hush $ unformat iso8601Date s)

@@ -25,8 +25,8 @@ import Web.HTML.HTMLElement (HTMLElement, fromElement, toElement)
 import Web.HTML.Window (document)
 
 import DateComponent as DC
-import PlotlyComponent as PC
-import Types (ClubId(..), Organization(..), StartOrEnd(..))
+import ClubComponent as CC
+import Types (ClubId(..), StartOrEnd(..))
 
 getElementsBySelector :: QuerySelector -> Effect (Array HTMLElement)
 getElementsBySelector q = do
@@ -53,10 +53,12 @@ populateClubDiv startDate endDate clubDiv = do
   clubNumberString <- (id <<< toElement) clubDiv
   case fromString clubNumberString of
     Nothing -> log $ "Cannot convert '" <> show clubNumberString <> "' to a club number."
-    Just n -> runHalogenAff $ runUI PC.component { org, metrics, startDate, endDate } clubDiv
+    Just n -> runHalogenAff $ runUI CC.component { clubName, clubNumber, metrics, startDate, endDate, plot } clubDiv
       where
-      org = Club $ ClubId n
+      clubName = show n
+      clubNumber = ClubId n
       metrics = [ "ActiveMembers", "MembershipBase", "NewMembers" ]
+      plot = Nothing
 
 main :: Effect Unit
 main = do
