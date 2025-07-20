@@ -1,11 +1,13 @@
 module Types
   ( AreaId(..)
+  , ClubDataResponse(..)
   , ClubId(..)
+  , ClubMetadataResponse(..)
   , Codomain(..)
+  , DateChangedEvent(..)
   , DistrictId(..)
   , DivisionId(..)
   , Organization(..)
-  , Response(..)
   , Series(..)
   , StartOrEnd(..)
   , iso8601Format
@@ -25,9 +27,21 @@ import Data.List (List(..), (:))
 import Data.Maybe (Maybe)
 import Data.Show.Generic (genericShow)
 
-newtype Response = Response { club_number :: Int, series :: Array Series }
+newtype ClubDataResponse = ClubDataResponse { club_number :: Int, series :: Array Series }
 
-derive newtype instance decodeJsonResponse :: DecodeJson Response
+derive newtype instance decodeJsonClubDataResponse :: DecodeJson ClubDataResponse
+
+newtype ClubMetadataResponse = ClubMetadataResponse
+  { club_name :: String
+  , club_number :: Int
+  , area :: Int
+  , division :: String
+  , district :: Int
+  }
+
+derive newtype instance decodeJsonClubMetadataResponse :: DecodeJson ClubMetadataResponse
+
+data DateChangedEvent = StartDateChanged Date | EndDateChanged Date
 
 newtype Series = Series { label :: String, domain :: Array String, codomain :: Codomain }
 

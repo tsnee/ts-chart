@@ -27,20 +27,20 @@ import Plotly.Plotly (newPlot)
 import Plotly.Shape (Shape(..))
 import Plotly.TraceData (TraceData, colorscale, fill, fillcolor, line, marker, mode, name, showscale, typ, x, y, z)
 import Plotly.Line (shape)
-import Types (Codomain(..), Response(..), Series(..))
+import Types (ClubDataResponse(..), Codomain(..), Series(..))
 
-fetchaff :: Aff Response
+fetchaff :: Aff ClubDataResponse
 fetchaff = do
   { json } <- fetch "https://api.brightringsoftware.com/measurements/club"
     { method: POST
     , body: toJsonString { "club_number": 2490993, "metrics": [ "MembershipBase", "NewMembers", "ActiveMembers" ] }
     , headers: { "Content-Type": "application/json" }
     }
-  x :: Response <- fromJson json
+  x :: ClubDataResponse <- fromJson json
   pure x
 
-stackedLineChart :: Response -> Effect Unit
-stackedLineChart (Response { series }) = do
+stackedLineChart :: ClubDataResponse -> Effect Unit
+stackedLineChart (ClubDataResponse { series }) = do
   let
     layout = title := "Stacked Area Chart"
 
@@ -105,7 +105,7 @@ heatmap = do
         <> yaxis := (AL.title := "Clubs")
   void $ newPlot (DivId "heatmap") td1 layout1
 
-logFetchResult :: Either Error Response -> Effect Unit
+logFetchResult :: Either Error ClubDataResponse -> Effect Unit
 logFetchResult (Left err) = log $ message err
 logFetchResult (Right a) = stackedLineChart a
 

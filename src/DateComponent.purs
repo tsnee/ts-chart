@@ -1,4 +1,4 @@
-module DateComponent (component) where
+module DateComponent (Input, component) where
 
 import Prelude
 
@@ -13,13 +13,13 @@ import Halogen.HTML.Properties as HP
 import Web.Event.Event (Event, EventType(..))
 import Web.UIEvent.InputEvent (data_, fromEvent)
 
-import Types (StartOrEnd, iso8601Format, iso8601Parse)
+import Types (DateChangedEvent(..), StartOrEnd(..), iso8601Format, iso8601Parse)
 
 type State = { startOrEnd :: StartOrEnd, date :: Date }
 
-type Input = State
+type Input = { startOrEnd ∷ StartOrEnd, date ∷ Date }
 
-type Output = State
+type Output = DateChangedEvent
 
 type Query :: forall k. k -> Type
 type Query = Const Void
@@ -51,5 +51,7 @@ component = H.mkComponent { initialState, render, eval }
     case maybeDateFromEvent genericEvt of
       Nothing -> pure unit
       Just d -> do
-        newState <- H.modify \s -> s { date = d }
-        H.raise newState
+        { startOrEnd } <- H.modify \s -> s { date = d }
+        case startOrEnd of
+          Start -> H.raise $ StartDateChanged d
+          End -> H.raise $ EndDateChanged d

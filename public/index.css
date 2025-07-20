@@ -27,7 +27,7 @@ img {
   max-height: 25vh;   /* never exceed the viewport height */
   width: auto;
   height: auto;
-  object-fit: contain; /* optional: scale without distortion */
+  object-fit: contain; /* scale without distortion */
   margin-left: auto;
   margin-right: 2em;
 }
@@ -48,13 +48,13 @@ img.responsive-image {
   height: 400px;
   margin-bottom: 1.5em;
 }
-.date-range {
-  margin-top: 1em;
-  display: flex;
-  justify-content: space-between;
-}
 .side-by-side {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
+}
+#date-range {
+  margin-top: 1em;
+  display: flex;
+  justify-content: space-between;
 }
