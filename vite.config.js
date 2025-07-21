@@ -23,7 +23,8 @@ export default defineConfig({
         area11: path.resolve(__dirname, 'area11.html'),
         area12: path.resolve(__dirname, 'area12.html'),
         area13: path.resolve(__dirname, 'area13.html'),
-        area14: path.resolve(__dirname, 'area14.html')
+        area14: path.resolve(__dirname, 'area14.html'),
+        area15: path.resolve(__dirname, 'area15.html')
       }
     }
   },
