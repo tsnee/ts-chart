@@ -1,15 +1,15 @@
 module Types
   ( AreaId(..)
+  , ChangeEvent(..)
+  , ChangeEventListener
   , ClubDataResponse(..)
   , ClubId(..)
   , ClubMetadataResponse(..)
   , Codomain(..)
-  , DateChangedEvent(..)
   , DistrictId(..)
   , DivisionId(..)
   , Organization(..)
   , Series(..)
-  , StartOrEnd(..)
   , iso8601Format
   , iso8601Parse
   ) where
@@ -26,6 +26,11 @@ import Data.Generic.Rep (class Generic)
 import Data.List (List(..), (:))
 import Data.Maybe (Maybe)
 import Data.Show.Generic (genericShow)
+import Effect.Aff (Aff)
+
+data ChangeEvent = ChangeEvent Date Date (Array String)
+
+type ChangeEventListener = ChangeEvent -> Aff (Either String Unit)
 
 newtype ClubDataResponse = ClubDataResponse { club_number :: Int, series :: Array Series }
 
@@ -40,8 +45,6 @@ newtype ClubMetadataResponse = ClubMetadataResponse
   }
 
 derive newtype instance decodeJsonClubMetadataResponse :: DecodeJson ClubMetadataResponse
-
-data DateChangedEvent = StartDateChanged Date | EndDateChanged Date
 
 newtype Series = Series { label :: String, domain :: Array String, codomain :: Codomain }
 
@@ -87,12 +90,6 @@ instance showDivisionId :: Show DivisionId where
 newtype DistrictId = DistrictId Int
 
 derive newtype instance showDistrictId :: Show DistrictId
-
-data StartOrEnd = Start | End
-
-instance showDateType :: Show StartOrEnd where
-  show Start = "Start"
-  show End = "End"
 
 separator :: FormatterCommand
 separator = Placeholder "-"

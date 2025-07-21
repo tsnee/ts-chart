@@ -8,16 +8,11 @@ package:
     - fetch-argonaut
     - foreign
     - formatters
-    - halogen
-    - halogen-css
-    - js-date
     - options
     - prelude
-    - stringutils
     - undefined
     - web-dom
     - web-html
-    - web-uievents
   test:
     main: Test.Main
     dependencies:

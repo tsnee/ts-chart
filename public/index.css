@@ -46,7 +46,10 @@ img.responsive-image {
 .chart {
   width: 95%;
   height: 400px;
-  margin-bottom: 1.5em;
+  padding-bottom: 1.5em;
+}
+.club {
+  padding-bottom: 1.5em;
 }
 .side-by-side {
   display: flex;
@@ -54,7 +57,7 @@ img.responsive-image {
   align-items: flex-start;
 }
 #date-range {
-  margin-top: 1em;
+  padding-top: 2em;
   display: flex;
   justify-content: space-between;
 }

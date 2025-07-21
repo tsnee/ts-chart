@@ -1,70 +1,80 @@
-module App (State, app) where
+module App (app) where
 
 import Prelude
 
-import Control.Monad.State.Class (class MonadState)
-import Data.Argonaut.Encode (toJsonString)
+import Control.Parallel (parSequence)
 import Data.Array (foldl, snoc)
-import Data.Const (Const)
 import Data.Date (Date, adjust)
+import Data.Either (Either(..))
 import Data.Foldable (traverse_)
-import Data.HTTP.Method (Method(..))
-import Data.Int (fromString)
-import Data.Maybe (Maybe(..))
-import Data.Options (Options, (:=))
+import Data.Maybe (Maybe(..), fromMaybe)
 import Data.Time.Duration (Days(..))
 import Data.Tuple (Tuple(..))
-import Data.Unfoldable (fromMaybe)
+import Data.Unfoldable as U
 import Effect (Effect)
-import Effect.Aff (Aff)
-import Effect.Aff.Class (class MonadAff, liftAff)
-import Effect.Class (liftEffect)
+import Effect.Aff (Aff, runAff_)
 import Effect.Class.Console (log)
+import Effect.Exception (Error, message)
 import Effect.Now (nowDate)
-import Fetch (fetch)
-import Fetch.Argonaut.Json (fromJson)
-import Halogen as H
-import Halogen.Aff.Util (runHalogenAff)
-import Halogen.HTML as HH
-import Halogen.HTML.Properties as HP
-import Halogen.Subscription as HS
-import Halogen.VDom.Driver (runUI)
-import Undefined (undefined)
-import Web.DOM.Document (toParentNode)
-import Web.DOM.Element (fromNode, id)
-import Web.DOM.Node (Node(..))
+import Web.DOM.Document (toNonElementParentNode, toParentNode)
+import Web.DOM.Element (Element, fromNode, toEventTarget)
+import Web.DOM.Node (Node)
 import Web.DOM.NodeList (toArray)
+import Web.DOM.NonElementParentNode (getElementById)
 import Web.DOM.ParentNode (QuerySelector(..), querySelectorAll)
+import Web.Event.Event (EventType(..))
+import Web.Event.EventTarget (addEventListener, eventListener)
 import Web.HTML (window)
-import Web.HTML.Common (ClassName(..))
 import Web.HTML.HTMLDocument (toDocument)
-import Web.HTML.HTMLElement (HTMLElement, fromElement, toElement)
+import Web.HTML.HTMLInputElement as HIE
 import Web.HTML.Window (document)
 
-import DateComponent as DC
-import ClubComponent as CC
-import Plotly.DivId (DivId(..))
-import Plotly.Layout (title)
-import Plotly.Plotly (newPlot)
-import Plotly.Shape (Shape(..))
-import Plotly.TraceData (TraceData, line, mode, name, typ, x, y)
-import Plotly.Line (shape)
-import Types (ClubId(..), ClubMetadataResponse(..), DateChangedEvent(..), StartOrEnd(..))
+import ClubComponent (render)
+import Types (ChangeEvent(..), ChangeEventListener, iso8601Format, iso8601Parse)
 
-type State =
-  { clubs :: Array ClubId
-  , metrics :: Array String
-  , startDate :: Date
-  , endDate :: Date
-  }
+startDateId :: String
+startDateId = "start-date"
 
-data Action
-  = Initialize
-  | ChangeMetrics (Array String)
-  | ChangeStartDate Date
-  | ChangeEndDate Date
+endDateId :: String
+endDateId = "end-date"
 
-getElementsBySelector :: QuerySelector -> Effect (Array HTMLElement)
+app :: Effect Unit
+app = do
+  endDate <- nowDate
+  let startDate = fromMaybe endDate $ adjust (Days (-180.0 :: Number)) endDate
+      metrics = [ "ActiveMembers", "MembershipBase", "NewMembers" ]
+  startDateInputM <- getInputElementById startDateId
+  endDateInputM <- getInputElementById endDateId
+  case Tuple startDateInputM endDateInputM of
+    Tuple (Just startDateInput) (Just endDateInput) -> mkClubComponents startDate startDateInput endDate endDateInput metrics
+    _ -> log $ "Could not find date input elements with IDs " <> show startDateId <> " and " <> show endDateId <> " in this HTML."
+
+mkClubComponents :: Date -> HIE.HTMLInputElement -> Date -> HIE.HTMLInputElement -> Array String -> Effect Unit
+mkClubComponents startDate startDateInput endDate endDateInput metrics = do
+  HIE.setDefaultValue (iso8601Format startDate) startDateInput
+  HIE.setDefaultValue (iso8601Format endDate) endDateInput
+  clubDivs <- getElementsBySelector $ QuerySelector "div.club"
+  let clubAffs :: Array (Aff (Either String ChangeEventListener))
+      clubAffs = clubDivs <#> render startDate endDate metrics
+      clubsAff :: Aff (Array (Either String ChangeEventListener))
+      clubsAff = parSequence clubAffs
+      addListener :: Either String ChangeEventListener -> Effect Unit
+      addListener (Left err) = log err
+      addListener (Right cel) = listenToChangeEvents startDateInput endDateInput metrics cel
+      callback :: Either Error (Array (Either String ChangeEventListener)) -> Effect Unit
+      callback (Left err) = log $ message err
+      callback (Right cels) = traverse_ addListener cels
+  runAff_ callback clubsAff
+
+getInputElementById :: String -> Effect (Maybe HIE.HTMLInputElement)
+getInputElementById id = do
+  win <- window
+  doc <- document win
+  let p = toNonElementParentNode $ toDocument doc
+  el <- getElementById id p
+  pure $ HIE.fromElement =<< el
+
+getElementsBySelector :: QuerySelector -> Effect (Array Element)
 getElementsBySelector q = do
   win <- window
   doc <- document win
@@ -73,54 +83,24 @@ getElementsBySelector q = do
   nodeArray <- toArray nodeList
   pure $ foldl f [] nodeArray
   where
-  f :: Array HTMLElement -> Node -> Array HTMLElement
-  f hs n = do
-    e <- fromMaybe $ fromNode n
-    h <- fromMaybe $ fromElement e
-    snoc hs h
+  f :: Array Element -> Node -> Array Element
+  f es n = do
+    e <- U.fromMaybe $ fromNode n
+    snoc es e
 
-createComponents :: Date -> Date -> Array HTMLElement -> Array HTMLElement -> Effect Unit
-createComponents startDate endDate [dateRange] clubDivs = runHalogenAff $ do
-  emitter <- populateDateDiv startDate endDate dateRange
-  traverse_ (populateClubDiv startDate endDate emitter) clubDivs
-createComponents _ _ _ _ = log "This HTML file must contain exactly one div with id date-range."
-
-populateDateDiv :: Date -> Date -> HTMLElement -> Aff (HS.Emitter DateChangedEvent)
-populateDateDiv startDate endDate parent = do
-  { messages: startEmitter } <- runUI DC.component { startOrEnd: Start, date: startDate } parent
-  { messages: endEmitter } <- runUI DC.component { startOrEnd: End, date: endDate } parent
-  { emitter, listener } <- liftEffect HS.create :: forall a. Aff (HS.SubscribeIO a)
-  void $ liftEffect $ HS.subscribe startEmitter $ HS.notify listener
-  void $ liftEffect $ HS.subscribe endEmitter $ HS.notify listener
-  pure emitter
-
-populateClubDiv :: Date -> Date -> HS.Emitter DateChangedEvent -> HTMLElement -> Aff Unit
-populateClubDiv startDate endDate emitter clubDiv = do
-  clubNumberString <- liftEffect $ id $ toElement clubDiv
-  case fromString clubNumberString of
-    Nothing -> log $ "Cannot convert '" <> show clubNumberString <> "' to a club number."
-    Just n -> do
-      let clubNumber = ClubId n
-          metrics = [ "ActiveMembers", "MembershipBase", "NewMembers" ]
-      clubName <- fetchClubName clubNumber
-      { query } <- runUI CC.component { clubName, clubNumber, metrics, startDate, endDate } clubDiv
-      let tell :: DateChangedEvent -> CC.Query _
-          tell = H.mkTell <<< CC.DateChangedQuery
-          f :: DateChangedEvent -> Effect ?_
-          f = query <<< tell
-      void $ liftEffect $ HS.subscribe emitter f
-
-fetchClubName ∷ ClubId → Aff String
-fetchClubName (ClubId clubNumber) = do
-  { json } ← fetch ("https://api.brightringsoftware.com/clubs/" <> show clubNumber) { method: GET }
-  response ∷ ClubMetadataResponse ← fromJson json
-  let ClubMetadataResponse { club_name } = response
-  pure club_name
-
-app :: Effect Unit
-app = do
-  endDate <- nowDate
-  let startDate = fromMaybe endDate $ adjust endDate (Days (-180.0 :: Number))
-  dateRange <- getElementsBySelector $ QuerySelector "div#date-range"
-  clubDivs <- getElementsBySelector $ QuerySelector "div.club"
-  createComponents startDate endDate dateRange clubDivs
+listenToChangeEvents :: HIE.HTMLInputElement -> HIE.HTMLInputElement -> Array String -> ChangeEventListener -> Effect Unit
+listenToChangeEvents startDateInput endDateInput metrics cel = do
+  let changeEvent = EventType "change"
+      callback :: Either Error (Either String Unit) -> Effect Unit
+      callback (Left err) = log $ message err
+      callback (Right (Left err)) = log err
+      callback (Right (Right _)) = pure unit
+      changeChart = const $ do
+        newStartValue <- HIE.value startDateInput
+        newEndValue <- HIE.value endDateInput
+        case Tuple (iso8601Parse newStartValue) (iso8601Parse newEndValue) of
+          Tuple (Just newStart) (Just newEnd) -> runAff_ callback $ cel $ ChangeEvent newStart newEnd metrics
+          _ -> log $ "Could not parse start date " <> show newStartValue <> " and/or end date " <> show newEndValue
+  listener <- eventListener changeChart
+  addEventListener changeEvent listener false $ toEventTarget $ HIE.toElement startDateInput
+  addEventListener changeEvent listener false $ toEventTarget $ HIE.toElement endDateInput
